@@ -1,0 +1,16 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "New Ionic App",
+	"webDir": "dist/app/browser",
+	"bundledWebRuntime": false,
+	"plugins": {
+		"SplashScreen": {
+			"launchAutoHide": false,
+			"androidScaleType": "CENTER_CROP",
+			"splashFullScreen": true,
+			"splashImmersive": false,
+			"showSpinner": false,
+			"backgroundColor": "#ffffff"
+		}
+	}
+}

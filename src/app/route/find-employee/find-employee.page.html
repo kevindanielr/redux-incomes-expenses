@@ -1,0 +1,388 @@
+
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+      <h6 style="color: white;">BÚSQUEDA DE EMPLEADO</h6>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>
+
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content class="contact-card-content">
+
+  <ion-slides [options]="sliderOptions"  *ngIf="!isInitSearch">
+
+    <ion-slide class="animate__animated animate__fadeIn">
+      <div class="slide animated fadeIn slow">
+        <img class="imagen" src="../../../assets/find.svg">
+        <h2>Sin resultados.</h2>
+        <p class="ion-text-center desc">Realiza la búsqueda de empleado por su número de identificación.</p>
+      </div>
+    </ion-slide>
+  
+  </ion-slides>
+
+  <div *ngIf="isInitSearch">
+
+    <ion-row class="user-details-wrapper">
+      <ion-col size="4">
+        <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+          <app-image-shell class="user-avatar" animation="spinner" [src]="this.employeeData?.employeePhoto"></app-image-shell>
+        </app-aspect-ratio>
+      </ion-col>
+      <ion-col class="user-info-wrapper" size="8">
+        <app-text-shell animation="bouncing" lines="2" *ngIf="!this.employeeData?.employeeFirstName"></app-text-shell>
+        <h3 class="user-name">{{ this.employeeData?.employeeFirstName }}  {{ this.employeeData?.employeeLastName }}</h3>
+        <!-- <h5 class="user-handle">{{ this.employeeData?.companyId?.companyName }}</h5>
+        <h5 class="user-handle">{{ this.employeeData?.accountId?.accountName }}</h5> -->
+      </ion-col>
+      <!-- <ion-col class="user-stats-wrapper" size="6">
+        <span class="user-stat-value">1553</span>
+        <span class="user-stat-name">Following</span>
+      </ion-col>
+      <ion-col class="user-stats-wrapper" size="6">
+        <span class="user-stat-value">537</span>
+        <span class="user-stat-name">Followers</span>
+      </ion-col> -->
+      <!-- <ion-col size="12">
+        <p class="user-bio">
+          I am a product and visual designer based in Uruguay. I have designed at Google, Amazon and Microsoft.
+        </p>
+      </ion-col> -->
+    </ion-row>
+    <ion-row class="user-preferences-wrapper">
+      <ion-col size="12">
+        <app-text-shell class="details-short-description" animation="bouncing" lines="6" *ngIf="!this.employeeData?.employeeFirstName"></app-text-shell>
+        <h4 class="preference-name" *ngIf="this.employeeData?.employeeFirstName">Número de contacto</h4>
+        <p class="preference-value" *ngIf="this.employeeData?.employeeFirstName">
+          {{ this.employeeData?.employeePhone }}
+        </p>
+      </ion-col>
+      <ion-col size="12" *ngIf="this.employeeData?.employeeFirstName">
+        <h4 class="preference-name">Correo electrónico</h4>
+        <p class="preference-value">
+          {{ this.employeeData?.employeeEmail }}
+        </p>
+      </ion-col>
+      <ion-col size="12" *ngIf="this.employeeData?.employeeFirstName">
+        <h4 class="preference-name">Empresa relacionada</h4>
+        <p class="preference-value">
+          {{ this.employeeData?.companyId?.companyName  }}
+        </p>
+      </ion-col>
+      <ion-col size="12" *ngIf="this.employeeData?.employeeFirstName">
+        <h4 class="preference-name">Cuenta</h4>
+        <p class="preference-value">
+          {{ this.employeeData?.accountId?.accountName }}
+        </p>
+      </ion-col>
+      <ion-col size="12" *ngIf="this.employeeData?.employeeFirstName">
+        <h4 class="preference-name">Dirección</h4>
+        <p class="preference-value">
+          {{ this.employeeData?.employeeAddress }}
+        </p>
+      </ion-col>
+    </ion-row>
+    
+    <!-- <div class="travel-details-content" *ngIf="!details">
+      <div class="location-wrapper">
+        <div class="location-header">
+          <span class="location-address">
+          </span>
+        </div>
+        <app-aspect-ratio [ratio]="{w: 64, h: 30}">
+          <app-image-shell [display]="'cover'" animation="spinner" class="related-activity-picture" [src]="item?.scheduleRouteId?.routeId?.routeImage"></app-image-shell>
+        </app-aspect-ratio>
+      </div>
+      <div class="location-wrapper">
+        <div class="location-header">
+          <span class="location-address">
+          </span>
+        </div>
+        <app-aspect-ratio [ratio]="{w: 64, h: 30}">
+          <app-image-shell [display]="'cover'" animation="spinner" class="related-activity-picture" [src]="item?.scheduleRouteId?.routeId?.routeImage"></app-image-shell>
+        </app-aspect-ratio>
+      </div>
+    </div> -->
+  
+    <div class="travel-details-content" *ngFor="let item of details">
+
+      <!-- RUTA NOCTURNA -->
+      <div *ngIf="item?.scheduleRouteId?.routeId?.routeImage">
+
+        <ion-item-divider sticky="true">
+          <ion-label>RUTA NOCTURNA INSCRITA</ion-label>
+        </ion-item-divider>
+        <br>
+        <div class="location-wrapper">
+          <div class="location-header">
+            <h3 class="detail-alt-title">INFORMACIÓN DE RUTA</h3>
+          </div>
+          <app-aspect-ratio [ratio]="{w: 64, h: 30}">
+            <app-image-shell [display]="'cover'" animation="spinner" class="related-activity-picture" [src]="item?.scheduleRouteId?.routeId?.routeImage"></app-image-shell>
+          </app-aspect-ratio>
+          <ion-row class="description-row">
+            <ion-col size="12">
+              <h3 class="details-name">
+                <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeId?.routeName"></app-text-shell>
+              </h3>
+              <p class="details-short-description">
+                <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeId?.routeDestinationCity?.concat(' - ', item?.scheduleRouteId?.routeId?.routeDestinationPlace)"></app-text-shell>
+              </p>
+            </ion-col>
+            <ion-col size="12">
+              <div class="details-score">
+                <div class="score-item">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <div class="score-value">
+                    <app-text-shell [data]="item?.scheduleRouteId?.routeDate | date: 'shortTime'"></app-text-shell>
+                  </div>
+                </div>
+                <div class="score-item">
+                  <ion-badge color="primary">{{ item?.scheduleRouteId?.routeId?.statusId?.statusName | uppercase }}</ion-badge>
+                </div>
+              </div>
+            </ion-col>
+    
+            <ion-col size="12">
+              <p class="details-description">
+                <app-text-shell animation="bouncing" lines="6" [data]="item?.scheduleRouteId?.routeId?.routeNotes"></app-text-shell>
+              </p>
+            </ion-col>
+          </ion-row>
+        </div>
+      
+          <div class="related-activities-wrapper" *ngIf="details?.length > 0">
+            
+            <div *ngIf="item?.routeTransportUnitId?.transportUnitId?.transportImage">
+              <h3 class="detail-alt-title">Información de unidad</h3>
+              <div>
+          
+                <ion-row class="related-activity">
+                  <ion-col size="12">
+                    <app-image-shell [display]="'cover'" animation="spinner" class="related-activity-picture" [src]="item?.routeTransportUnitId?.transportUnitId?.transportImage">
+                      <app-aspect-ratio [ratio]="{w:64, h:35}">
+                      </app-aspect-ratio>
+                    </app-image-shell>
+                  </ion-col>
+                </ion-row>
+
+                
+            
+                <ion-row class="description-row">
+                  
+                  <ion-col size="12" >
+                    <ion-row class="details-tags">
+                      <ion-col class="tag-wrapper">
+                        <span class="item-tag">
+                          Conductor: {{ item?.routeTransportUnitId?.driverId?.userId?.userName }}
+                        </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+            
+                  <ion-col class="accommodations-col" size="12" style="display: flex; justify-content: center;">
+                    <ion-row class="accommodations-wrapper">
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="id-card-outline"></ion-icon>
+                        <span class="accommodation-property">Placa</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.licensePlate"></app-text-shell>
+                        </span>
+                      </ion-col>
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="car-sport-outline"></ion-icon>
+                        <span class="accommodation-property">Unidad</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.unitNumber"></app-text-shell>
+                        </span>
+                      </ion-col>
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="exit-outline"></ion-icon>
+                        <span class="accommodation-property">Puertas</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.doors"></app-text-shell>
+                        </span>
+                      </ion-col>
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="people-outline"></ion-icon>
+                        <span class="accommodation-property">Pasajeros</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.passengers"></app-text-shell>
+                        </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+            
+                </ion-row>
+          
+              </div>
+            </div>
+
+
+            <div *ngIf="!item?.routeTransportUnitId?.transportUnitId?.transportImage">
+              <h3 class="detail-alt-title">SIN UNIDAD ASIGNADA</h3>
+            </div>
+
+
+          </div>
+
+      </div>
+      <!-- RUTA NOCTURNA -->
+
+
+      <!-- RUTA DIURNA -->
+      <div *ngIf="item?.scheduleRouteId?.routeRequestId">
+
+        <ion-item-divider sticky="true">
+          <ion-label>RUTA DIURNA INSCRITA</ion-label>
+        </ion-item-divider>
+        <br>
+        <div class="location-wrapper">
+          <!-- <div class="location-header">
+            <h3 class="detail-alt-title">Información de RUTA</h3>
+            <span class="location-address">
+              <app-text-shell [data]="details?.location?.address"></app-text-shell>
+            </span>
+          </div> -->
+          <!-- <app-aspect-ratio [ratio]="{w: 64, h: 30}">
+            <app-image-shell [display]="'cover'" animation="spinner" class="related-activity-picture" [src]="item?.scheduleRouteId?.routeId?.routeImage"></app-image-shell>
+          </app-aspect-ratio> -->
+          <ion-row class="description-row">
+            <ion-col size="12">
+              <h6 class="details-name" *ngIf="item?.scheduleRouteId?.routeRequestId?.from !== null">
+                <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeRequestId?.from?.concat(' - ', item?.scheduleRouteId?.routeRequestId?.to)"></app-text-shell>
+              </h6>
+              <h6 class="details-name" *ngIf="item?.scheduleRouteId?.routeRequestId?.from === null">
+                <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeRequestId?.routeId?.routeName?.concat(' - ', item?.scheduleRouteId?.routeRequestId?.routeId?.routeDestinationPlace)"></app-text-shell>
+              </h6>
+            </ion-col>
+            <ion-col size="12">
+              <div class="details-score">
+                <div class="score-item">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <div class="score-value">
+                    <app-text-shell [data]="item?.scheduleRouteId?.routeDate | date: 'shortTime'"></app-text-shell>
+                  </div>
+                </div>
+                <div class="score-item">
+                  <ion-badge color="primary">{{ item?.scheduleRouteId?.routeId?.statusId?.statusName | uppercase }}</ion-badge>
+                </div>
+              </div>
+            </ion-col>
+    
+            <ion-col size="12" *ngIf="item?.scheduleRouteId?.routeRequestId?.notes !== null">
+              <p class="details-description">
+                <app-text-shell animation="bouncing" lines="6" [data]="item?.scheduleRouteId?.routeRequestId?.notes"></app-text-shell>
+              </p>
+            </ion-col>
+          </ion-row>
+        </div>
+      
+          <div class="related-activities-wrapper" *ngIf="details?.length > 0">
+            <div *ngIf="item?.routeTransportUnitId?.transportUnitId?.transportImage">
+              <h3 class="detail-alt-title">Información de unidad</h3>
+              <div>
+          
+                <ion-row class="related-activity">
+                  <ion-col size="12">
+                    <app-image-shell [display]="'cover'" animation="spinner" class="related-activity-picture" [src]="item?.routeTransportUnitId?.transportUnitId?.transportImage">
+                      <app-aspect-ratio [ratio]="{w:64, h:35}">
+                      </app-aspect-ratio>
+                    </app-image-shell>
+                  </ion-col>
+                </ion-row>
+
+                
+            
+                <ion-row class="description-row">
+                  
+                  <ion-col size="12" >
+                    <ion-row class="details-tags">
+                      <ion-col class="tag-wrapper">
+                        <span class="item-tag">
+                          Conductor: {{ item?.routeTransportUnitId?.driverId?.userId?.userName }}
+                        </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+            
+                  <ion-col class="accommodations-col" size="12" style="display: flex; justify-content: center;">
+                    <ion-row class="accommodations-wrapper">
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="id-card-outline"></ion-icon>
+                        <span class="accommodation-property">Placa</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.licensePlate"></app-text-shell>
+                        </span>
+                      </ion-col>
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="car-sport-outline"></ion-icon>
+                        <span class="accommodation-property">Unidad</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.unitNumber"></app-text-shell>
+                        </span>
+                      </ion-col>
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="exit-outline"></ion-icon>
+                        <span class="accommodation-property">Puertas</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.doors"></app-text-shell>
+                        </span>
+                      </ion-col>
+                      <ion-col class="item-accommodation">
+                        <ion-icon class="accommodation-icon" name="people-outline"></ion-icon>
+                        <span class="accommodation-property">Pasajeros</span>
+                        <span class="accommodation-value">
+                          <app-text-shell [data]="item?.routeTransportUnitId?.transportUnitId?.passengers"></app-text-shell>
+                        </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+            
+                </ion-row>
+              </div>
+            </div>
+
+
+            <div *ngIf="!item?.routeTransportUnitId?.transportUnitId?.transportImage">
+              <h3 class="detail-alt-title">SIN UNIDAD ASIGNADA</h3>
+            </div>
+          </div>
+          
+      </div>
+      <!-- RUTA DIURNA -->
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </div>
+  
+</ion-content>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button data-desc="Asignar Ruta" color="secondary" (click)="alertAsignUser()" *ngIf="this.employeeData?.employeeFirstName">
+      <ion-icon name="arrow-redo-outline"></ion-icon>
+    </ion-fab-button>
+    <br>
+    <ion-fab-button data-desc="Búsqueda" color="secondary" (click)="alertSearchUser()" >
+      <ion-icon name="search-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+

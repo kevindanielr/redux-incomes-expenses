@@ -1,0 +1,65 @@
+.welcome-card img {
+  max-height: 35vh;
+  overflow: hidden;
+}
+
+.slide-full {
+  height: 100% !important;
+}
+
+ion-card {
+  overflow: unset !important;
+}
+
+ion-card {
+  height: 450px;
+  width: 350px;
+}
+
+.slide-image {
+  width: 200px;
+  text-align: center;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  position: relative;
+  top: -10px;
+}
+
+.slide-image-2 {
+  width: 350px;
+  text-align: center;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  position: relative;
+  top: -50px;
+}
+
+ion-card-header {
+  position: relative;
+  top: -50px;
+}
+
+ion-card-content {
+  position: relative;
+  top: -40px;
+}
+
+.avatar {
+  width: 150px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.avatar-2 {
+  width: 250px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

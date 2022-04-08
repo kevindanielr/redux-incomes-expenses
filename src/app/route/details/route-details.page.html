@@ -1,0 +1,220 @@
+<ion-header>
+  <ion-toolbar color="primary" class="ion-text-uppercase">
+    <ion-button slot="start" fill="clear" color="light" (click)="closeModal()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </ion-button>
+    <h6>DETALLE DE RUTA</h6>
+  </ion-toolbar>
+  <app-countdown-timer style="
+      --countdown-fill-background: #1C1C1C;
+      --countdown-padding: 10px;
+      --countdown-value-color: #FFFFFF;
+      --countdown-unit-color: #F2F2F2;
+    " fill="countdown" [end]="details?.routeDate" [units]="{from: 'hour', to: 'second'}"></app-countdown-timer>
+</ion-header>
+
+
+
+
+<ion-content class="travel-details-content">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-row class="image-row">
+    <ion-col size="12">
+      <app-image-shell [display]="'cover'" animation="spinner" class="add-overlay details-image" [src]="details?.routeId?.routeImage">
+        <app-aspect-ratio [ratio]="{w:64, h:50}">
+          <div class="icon-wrapper">
+            <div class="item-icon">
+                <app-image-shell *ngIf="details?.routeId?.routeImage" animation="spinner" [src]="'./assets/sample-images/route/route.png'" class="icon-image"></app-image-shell>
+            </div>
+          </div>
+        </app-aspect-ratio>
+      </app-image-shell>
+    </ion-col>
+  </ion-row>
+  <ion-row class="description-row">
+    <ion-col size="12">
+      <h3 class="details-name">
+        <app-text-shell animation="bouncing" [data]="details?.routeId?.routeName"></app-text-shell>
+      </h3>
+      <p class="details-short-description">
+        <app-text-shell animation="bouncing" [data]="details?.routeId?.routeDestinationCity?.concat(' - ', details?.routeId?.routeDestinationPlace)"></app-text-shell>
+      </p>
+    </ion-col>
+    <ion-col size="12">
+      <div class="details-score">
+        <div class="score-item">
+          <ion-icon name="time-outline"></ion-icon>
+          <div class="score-value">
+            <app-text-shell [data]="details?.routeDate | date: 'shortTime'"></app-text-shell>
+          </div>
+        </div>
+        <div class="score-item">
+          <ion-badge color="primary">{{ details?.statusId?.statusName | uppercase }}</ion-badge>
+        </div>
+        <!-- <div class="score-item" *ngIf="details?.lstRouteEmployees?.length > 0">
+          <ion-badge color="secondary">{{ details?.lstRouteEmployees.length }} EMPLEADOS</ion-badge>
+        </div> -->
+        <div class="score-item" *ngIf="details?.lstRouteTransport?.length > 0">
+          <ion-badge color="secondary">{{ details?.lstRouteTransport.length }} CONDUCTORES</ion-badge>
+        </div>
+      </div>
+    </ion-col>
+    <ion-col size="12" >
+      <div *ngIf="details?.lstRouteTransport?.length > 0">
+        <ion-row class="details-tags" *ngFor="let transport of details?.lstRouteTransport">
+          <ion-col class="tag-wrapper">
+            <span class="item-tag">
+              Placa: {{ transport?.transportUnitId?.licensePlate }}
+            </span>
+          </ion-col>
+          <ion-col class="tag-wrapper">
+            <span class="item-tag">
+              Conductor: {{ transport?.driverId?.userId?.userName }}
+            </span>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <ion-row class="details-tags" *ngIf="details?.lstRouteTransport?.length === 0">
+        <ion-col class="tag-wrapper">
+          <span class="item-tag">
+            Sin conductor asignado
+          </span>
+        </ion-col>
+      </ion-row>
+
+    </ion-col>
+    <ion-col size="12">
+      <p class="details-description">
+        <app-text-shell animation="bouncing" lines="6" [data]="details?.routeId?.routeNotes"></app-text-shell>
+      </p>
+    </ion-col>
+  </ion-row>
+
+
+  <!-- <div class="open-hours-wrapper">
+    <h3 class="detail-title">Paradas</h3>
+    <ul class="schedules-list">
+      <li class="open-hour-item" *ngFor="let stops of details?.routeId?.stops">
+        <div class="schedule-outer">
+          <span class="schedule-day">
+            <app-text-shell [data]="stops.stopName"></app-text-shell>
+          </span>
+          <div class="schedule-hours">
+            <ng-container>
+              <span class="schedule-value">
+                <app-text-shell [data]="stops.estimatedTime | date : 'shortTime'"></app-text-shell>
+              </span>
+            </ng-container>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="location-wrapper">
+    <div class="location-header">
+      <h3 class="detail-title">Ubicaciones de paradas en el mapa</h3>
+      <span class="location-address">
+      </span>
+    </div>
+    <app-aspect-ratio [ratio]="{w: 64, h: 30}">
+      <app-image-shell class="location-image" animation="spinner" [src]="" *ngIf="!details?.routeId?.routeNotes"></app-image-shell>
+      <div id='map'>
+      </div>
+    </app-aspect-ratio>
+  </div> -->
+
+  
+  
+  <div class="related-activities-wrapper" *ngIf="details?.lstRouteTransport?.length > 0">
+    <h3 class="detail-alt-title">Información de unidad</h3>
+
+    <div *ngFor="let transport of details?.lstRouteTransport">
+
+      <ion-row class="related-activity">
+        <ion-col size="12">
+          <app-image-shell [display]="'cover'" animation="spinner" class="related-activity-picture" [src]="transport?.transportUnitId?.transportImage">
+            <app-aspect-ratio [ratio]="{w:64, h:35}">
+            </app-aspect-ratio>
+          </app-image-shell>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="description-row">
+  
+        <ion-col class="accommodations-col" size="12" style="display: flex; justify-content: center;">
+          <ion-row class="accommodations-wrapper">
+            <ion-col class="item-accommodation">
+              <ion-icon class="accommodation-icon" name="id-card-outline"></ion-icon>
+              <span class="accommodation-property">Placa</span>
+              <span class="accommodation-value">
+                <app-text-shell [data]="transport?.transportUnitId?.licensePlate"></app-text-shell>
+              </span>
+            </ion-col>
+            <ion-col class="item-accommodation">
+              <ion-icon class="accommodation-icon" name="car-sport-outline"></ion-icon>
+              <span class="accommodation-property">Unidad</span>
+              <span class="accommodation-value">
+                <app-text-shell [data]="transport?.transportUnitId?.unitNumber"></app-text-shell>
+              </span>
+            </ion-col>
+            <ion-col class="item-accommodation">
+              <ion-icon class="accommodation-icon" name="exit-outline"></ion-icon>
+              <span class="accommodation-property">Puertas</span>
+              <span class="accommodation-value">
+                <app-text-shell [data]="transport?.transportUnitId?.doors"></app-text-shell>
+              </span>
+            </ion-col>
+            <ion-col class="item-accommodation">
+              <ion-icon class="accommodation-icon" name="people-outline"></ion-icon>
+              <span class="accommodation-property">Pasajeros</span>
+              <span class="accommodation-value">
+                <app-text-shell [data]="transport?.transportUnitId?.passengers"></app-text-shell>
+              </span>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+  
+      </ion-row>
+
+    </div>
+  </div>
+
+  <ion-row class="description-row">
+    <ion-col size="12">
+        <ion-button class="submit-btn animate_animated animate__bounceIn" type="submit" expand="block" fill="solid" *ngIf="typeUser !== 4 && typeUser !== 5 && !this.isInRoute" (click)="joinRouteEmployee()" >UNIRME A RUTA</ion-button>
+    </ion-col>
+    <ion-col size="12">
+      <ion-button class="submit-btn animate_animated animate__bounceIn" type="submit" expand="block" fill="outline" *ngIf="typeUser !== 4 && typeUser !== 5 && this.isInRoute" (click)="deleteEmployee()" >SALIRSE DE RUTA</ion-button>
+  </ion-col>
+  </ion-row>
+
+  <ion-fab class="animate_animated animate__bounceIn" horizontal="end" vertical="bottom" slot="fixed" *ngIf="typeUser !== 1 && details?.scheduleRouteId">
+    <ion-fab-button color="secondary">
+      <ion-icon md="caret-up" ios="chevron-up-circle-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button data-desc="Unirme a ruta" color="dark" *ngIf="typeUser !== 5 && typeUser !== 4 && typeUser !== 3 && !this.isInRoute" (click)="joinRouteEmployee()">
+        <ion-icon name="open-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button data-desc="Salir de ruta" color="dark" *ngIf="typeUser !== 5 && typeUser !== 4 && typeUser !== 3 && this.isInRoute" (click)="deleteEmployee()">
+        <ion-icon name="exit-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button data-desc="Lista de empleados" (click)="openModalListUser( details?.scheduleRouteId, details )" color="dark">
+        <ion-icon name="list-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button data-desc="Asignar ruta" (click)="openModalAsignRoute( details?.scheduleRouteId, details )" color="dark" *ngIf="typeUser === 4">
+        <ion-icon name="car-sport-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button data-desc="Empezar ruta" (click)="openModalStartRoute( details?.scheduleRouteId, details )" color="dark" *ngIf="typeUser === 5 || typeUser === 4">
+        <ion-icon name="flag-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>

@@ -1,0 +1,48 @@
+{
+    "today":[
+      {
+        "name": "Martin Salgado",
+        "image": "./assets/sample-images/notifications/100x100Notification1.jpg",
+        "message": "MS153213",
+        "date": "5:03 pm"
+      },
+      {
+        "name": "Jessica Paniagua",
+        "image": "./assets/sample-images/notifications/100x100Notification2.jpg",
+        "message": "JP152134",
+        "date": "2:54 pm"
+      },
+      {
+        "name": "Judith Vides",
+        "image": "./assets/sample-images/notifications/100x100Notification3.jpg",
+        "message": "JV151245",
+        "date": "1:54 pm"
+      }
+    ],
+    "yesterday":[
+      {
+        "name": "George",
+        "image": "./assets/sample-images/notifications/100x100Notification4.jpg",
+        "message": "Wooow, that's amazing!",
+        "date": "9:11 pm"
+      },
+      {
+        "name": "Kirsten",
+        "image": "./assets/sample-images/notifications/100x100Notification5.jpg",
+        "message": "Thanks again for the dinner, it was delicious!",
+        "date": "3:09 pm"
+      },
+      {
+        "name": "Phillip",
+        "image": "./assets/sample-images/notifications/100x100Notification6.jpg",
+        "message": "Are you going to the gym today?",
+        "date": "11:34 am"
+      },
+      {
+        "name": "Diane",
+        "image": "./assets/sample-images/notifications/100x100Notification7.jpg",
+        "message": "I was wondering if something happened to Sara... she was so weird yesterday.",
+        "date": "7:12 am"
+      }
+  ]
+}

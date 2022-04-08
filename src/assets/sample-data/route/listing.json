@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "routeId": "1",
+      "routeName": "Metrocentro",
+      "routeDestinationCity": "San Salvador",
+      "routeDestinationPlace": "Metrocentro 8va Etapa",
+      "cronExpression": "",
+      "stops": [
+
+      ],
+      "notes": "Favor estar 5 minutos antes de la hora de salida.",
+      "routeDepartureTime": "2022-01-04T18:11:25+00:00",
+      "statusId": "ASIGNADO",
+      "companyId": "1",
+      "image": "./assets/sample-images/route/metro.jpg"
+    },
+    {
+      "routeId": "1",
+      "routeName": "El Cafetalón",
+      "routeDestinationCity": "La Libertad",
+      "routeDestinationPlace": "Santa Tecla",
+      "cronExpression": "",
+      "stops": [
+
+      ],
+      "notes": "Favor estar 5 minutos antes de la hora de salida.",
+      "routeDepartureTime": "2022-01-04T15:11:25+00:00",
+      "statusId": "APROBADA",
+      "companyId": "1",
+      "image": "./assets/sample-images/route/santatecla.jpg"
+    },{
+      "routeId": "1",
+      "routeName": "Santa Ana",
+      "routeDestinationCity": "Santa Ana",
+      "routeDestinationPlace": "El Congo",
+      "cronExpression": "",
+      "stops": [
+
+      ],
+      "notes": "Favor estar 5 minutos antes de la hora de salida.",
+      "routeDepartureTime": "2022-01-04T10:11:25+00:00",
+      "statusId": "APROBADA",
+      "companyId": "1",
+      "image": "./assets/sample-images/route/santaana.jpg"
+    }
+  ]
+}

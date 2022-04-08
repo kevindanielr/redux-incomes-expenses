@@ -1,0 +1,88 @@
+<!-- This is the proper way if you have submit button outside your ion-content form (typically in the ion-header or ion-footer) -->
+<!-- (ref: https://github.com/ionic-team/ionic/issues/16661) -->
+<form class="create-user-form ion-page" [formGroup]="employeeForm" (ngSubmit)="createUser()">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+        <h6>MI PERFIL</h6>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="create-user-content">
+    <ion-row class="select-user-image-row">
+      <ion-col class="user-image-col" size="5">
+        <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+          <app-image-shell [display]="'cover'" class="user-image" animation="spinner" [src]="" [alt]="'user image'" *ngIf="this.tempImage === null"></app-image-shell>
+          <app-image-shell [display]="'cover'" class="user-image" animation="spinner" [src]="this.tempImage" [alt]="'user image'" *ngIf="this.tempImage !== null"></app-image-shell>
+        </app-aspect-ratio>
+        <ion-button class="change-image-btn" color="secondary" (click)="changeUserImage()">
+          <ion-icon class="btn-icon" slot="icon-only" name="camera"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <section class="user-details-fields fields-section">
+      <ion-list class="inputs-list" lines="full">
+
+        <ion-grid>
+          <ion-row>
+            <ion-col size="2"></ion-col>
+            <ion-col class="ion-text-center" size="8">
+              <ngx-barcode [bc-value]="this.employeeData?.employeeNumber" [bc-width]="3" [bc-height]="40"></ngx-barcode>
+            </ion-col>
+            <ion-col size="2"></ion-col>
+          </ion-row>
+        </ion-grid>
+
+
+        <ion-item class="input-item">
+          <ion-label color="secondary" position="floating">Nombres</ion-label>
+          <ion-input type="text" formControlName="employeeFirstName" required></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-label color="secondary" position="floating">Apellidos</ion-label>
+          <ion-input type="text" formControlName="employeeLastName" required></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-label color="secondary" position="floating">Carnet</ion-label>
+          <ion-input type="text" formControlName="employeeNumber" required [disabled]="true"></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-label color="secondary" position="floating">Correo electrónico</ion-label>
+          <ion-input type="email" formControlName="employeeEmail" required ></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-label color="secondary" position="floating">Teléfono</ion-label>
+          <ion-input type="number" formControlName="employeePhone" required (keypress)="numberOnlyValidation($event)"></ion-input>
+        </ion-item>
+
+        <ion-item class="input-item">
+          <ion-label color="secondary" position="floating">Dirección</ion-label>
+          <ion-textarea rows="5" formControlName="employeeAddress"></ion-textarea>
+        </ion-item>
+
+        <ion-item class="input-item" formGroupName="userId">
+          <app-show-hide-password>
+            <ion-input type="password" placeholder="Contraseña" formControlName="password"></ion-input>
+          </app-show-hide-password>
+        </ion-item>
+        
+      </ion-list>
+    </section>
+
+  </ion-content>
+
+  <ion-footer>
+    <ion-row class="form-actions-wrapper">
+      <ion-col>
+        <ion-button class="submit-btn" expand="block" color="secondary" type="submit" fill="solid" [disabled]="!employeeForm.valid">MODIFICAR PERFIL</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-footer>
+</form>

@@ -1,0 +1,113 @@
+// http://ionicframework.com/docs/theming/
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500,700');
+
+@import "~@ionic/angular/css/core.css";
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+// EXTRA GLOBAL STYLES
+// Add custom Ionic Colors
+@import "theme/custom-ion-colors.scss";
+// Add base app styles
+@import "theme/app-defaults.scss";
+// Add base shell styles
+@import "theme/shell-defaults.scss";
+
+.action-dark,
+.action-sheet-group {
+    background-color: var( --ion-color-primary ) !important;
+    color: var( --ion-color-light ) !important;
+}
+
+.action-dark ion-icon {
+    color: var( --ion-color-level-three ) !important;
+}
+
+.action-sheet-button.sc-ion-action-sheet-md  {
+    color: var( --ion-color-light ) !important;
+}
+
+:root {
+
+    // Default values
+    --select-alert-color: rgb(252, 252, 255);
+    --select-alert-background: #2e77a8;
+    --select-alert-margin: 16px;
+    
+    .alert-head {
+      padding-top: calc((var(--select-alert-margin) / 4) * 3);
+      padding-bottom: calc((var(--select-alert-margin) / 4) * 3);
+      padding-inline-start: var(--select-alert-margin);
+      padding-inline-end: var(--select-alert-margin);
+    }
+    
+    .alert-title {
+      color: var(--select-alert-color);
+    }
+    
+    .alert-head,
+    .alert-message {
+      background-color: var(--select-alert-background);
+    }
+    
+    // iOS styles
+    .alert-wrapper.sc-ion-alert-ios {
+      .alert-title {
+        margin: 0px;
+      }
+    }
+    
+    // Material styles
+    .alert-wrapper.sc-ion-alert-md {
+      .alert-title {
+        font-size: 18px;
+        font-weight: 400;
+      }
+    
+      .alert-button {
+        // Values taken from Ionic small button preset
+        --padding-top: 0;
+        --padding-start: 0.9em;
+        --padding-end: 0.9em;
+        --padding-bottom: 0;
+    
+        height: 2.1em;
+        font-size: 13px;
+      }
+    }
+
+    .premio-modal{
+      // background-color: red;
+      .modal-wrapper{
+        background: rgba(0, 0, 0, 0.5) !important;
+        /* padding: 20% 10% !important; */
+        width: 20%;
+        height: 25%;
+        border-radius: 5px;
+      }
+    }
+
+    
+}
+
+.my-custom-modal-css {
+  --width: 70%;
+  --min-width: auto;
+  --max-width: auto;
+  --height: 30%;
+}
+
+.my-custom-modal-css-equipment {
+  --width: 85%;
+  --min-width: auto;
+  --max-width: auto;
+  --height: 70%;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}

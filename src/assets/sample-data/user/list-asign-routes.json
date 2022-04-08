@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "image": "./assets/sample-images/route/transportunit.jpg",
+      "name": "Metrocentro 8va Etapa",
+      "place": "San Salvador",
+      "unitTransport": "Unidad 4, Placa: MB151213",
+      "driver": "Daniel Rivas",
+      "following": true
+    }
+  ] 
+}

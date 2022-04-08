@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>
+      <h6>Asignación de Ruta</h6>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [formGroup]="asignForm" (ngSubmit)="onSubmit()">
+  <ion-item>
+    <ion-label>Rutas disponibles</ion-label>
+    <ion-select interface="action-sheet" okText="OK" cancelText="Cancelar" formControlName="scheduleRouteId">
+      <ion-select-option *ngFor="let item of this.scheduleRoutes" [value]="item.scheduleRouteId">{{ item?.routeId?.routeDestinationCity }} - {{ item?.routeId?.routeDestinationPlace }} - {{ item?.routeDate | date: 'shortTime' }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  
+<ion-text class="descripcion">
+  <ion-label color="danger" *ngIf="scheduleRouteIdNoValido">
+    <ion-icon name="information-circle"></ion-icon> Seleccione una ruta para inscribir al usuario.
+  </ion-label>
+</ion-text>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button class="submit-btn" type="submit" expand="block" fill="solid" (click)="onSubmit()">Inscribir en ruta</ion-button>
+  </ion-toolbar>
+</ion-footer>

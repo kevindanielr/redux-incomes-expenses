@@ -1,0 +1,228 @@
+<ion-toolbar color="primary" class="ion-text-uppercase">
+  <ion-button slot="start" fill="clear" color="light" (click)="closeModal()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <h6>LISTA DE CHEQUEO</h6>
+</ion-toolbar>
+
+<ion-content class="user-friends-content">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-row class="range-item-row animate__animated animate__fadeInDown" *ngIf="typeUser === 4 || typeUser === 3">
+    <ion-col size="12">
+      <ion-item class="input-item item-label-floating">
+        <ion-label position="floating">RUTAS ASIGNADAS</ion-label>
+        <ion-select interface="action-sheet"  cancelText="Cancelar" okText="OK" (ionChange)="changeRoute( $event )">
+          <ion-select-option *ngFor="let item of this.routesAsign" [value]="item.routeTransportUnitId">{{ item?.driverId?.userId?.userName }} - {{ item?.transportUnitId?.unitNumber }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+
+  <div class="firebase-listing-content animate__animated animate__fadeInDown">
+    <ion-list class="items-list animate__animated animate__fadeInDown" *ngIf="flagSelectDriver">
+      <ion-item class="list-item">
+        <ion-row class="user-row">
+          <ion-col size="3" class="user-image-wrapper">
+            <app-aspect-ratio [ratio]="{w: 1.5, h: 1}">
+              <app-image-shell class="user-image" animation="spinner" [src]="this.selectedDriver?.transportUnitId?.transportImage" [alt]="'item image'"></app-image-shell>
+            </app-aspect-ratio>
+          </ion-col>
+          <ion-col class="user-data-wrapper">
+            <div class="user-info">
+              <h3 class="user-name">
+                <app-text-shell animation="bouncing" [data]="this.selectedDriver?.driverId?.userId?.userName"></app-text-shell>
+              </h3>
+              <h3 class="user-name">
+                <app-text-shell animation="bouncing" [data]="this.selectedDriver?.transportUnitId?.unitNumber"></app-text-shell>
+              </h3>
+              <h5 class="user-age">
+                <app-text-shell animation="bouncing" [data]="this.selectedDriver?.transportUnitId?.licensePlate"></app-text-shell>
+              </h5>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-searchbar placeholder="Búsqueda" class="friends-searchbar" animated [(ngModel)]="searchQuery"></ion-searchbar>
+
+  <ng-template #friendItem let-friend="friend">
+    <ion-item-sliding>
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="addNovedad(friend?.routeEmployeeId)">
+          NOVEDADES
+        </ion-item-option>
+        <ion-item-option (click)="removeEmployee(friend?.employeeId?.employeeNumber, friend?.onBoard)">
+          REMOVER
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item>
+
+        <ion-row class="user-details-section">
+          <ion-col class="user-image-wrapper" size="3">
+            <app-aspect-ratio [ratio]="{w:1, h:1}">
+              <app-image-shell class="user-image" animation="spinner" [src]="friend?.employeeId?.employeePhoto"
+                [alt]="'friend'"></app-image-shell>
+            </app-aspect-ratio>
+            <ion-col class="user-actions-wrapper">
+              <span class="user-membership" *ngIf="friend?.onBoard">
+                <app-text-shell [data]="'VERIFICADO'"></app-text-shell>
+              </span>
+              <span class="user-membership-disabled" *ngIf="!friend?.onBoard">
+                <app-text-shell [data]="'PENDIENTE'"></app-text-shell>
+              </span>
+            </ion-col>
+          </ion-col>
+          <ion-col class="user-data-wrapper">
+            <div class="user-info">
+              <h3 class="user-name">
+                <app-text-shell animation="bouncing" [data]="friend?.employeeId?.employeeFirstName"></app-text-shell>
+              </h3>
+              <h5 class="user-job" *ngIf="friend?.employeeId?.employeeLastName !== null">
+                <app-text-shell animation="bouncing" [data]="friend?.employeeId?.employeeLastName"></app-text-shell>
+              </h5>
+              <h5 class="user-job">
+                <span *ngIf="friend?.employeeId?.employeeNumber">No ID: {{ friend?.employeeId?.employeeNumber }} </span>
+                <app-text-shell *ngIf="!friend?.employeeId?.employeeNumber" animation="bouncing"
+                  [data]="friend?.employeeId?.employeeNumber"></app-text-shell>
+              </h5>
+              <h5 class="user-job1">
+                <span *ngIf="friend?.employeeId?.companyId?.companyName">Compañia:
+                  {{ friend?.employeeId?.companyId?.companyName }} </span>
+                <app-text-shell *ngIf="!friend?.employeeId?.companyId?.companyName" animation="bouncing"
+                  [data]="friend?.employeeId?.companyId?.companyName"></app-text-shell>
+              </h5>
+              <h5 class="user-job2">
+                <span *ngIf="friend?.employeeId?.accountId?.accountName">Cuenta:
+                  {{ friend?.employeeId?.accountId?.accountName }} </span>
+                <app-text-shell *ngIf="!friend?.employeeId?.accountId?.accountName" animation="bouncing"
+                  [data]="friend?.employeeId?.accountId?.accountName"></app-text-shell>
+              </h5>
+              <h5 class="user-job2" *ngIf="friend?.employeeId?.employeeAddress !== null">
+                <span *ngIf="friend?.employeeId?.employeeAddress">Dirección:
+                  {{ friend?.employeeId?.employeeAddress }} </span>
+                <app-text-shell *ngIf="!friend?.employeeId?.employeeAddress" animation="bouncing"
+                  [data]="friend?.employeeId?.employeeAddress"></app-text-shell>
+              </h5>
+              <h5 style="color: black;  font-style: italic;" class="user-job2" *ngIf="friend?.routeNotes !== null">
+                <span *ngIf="friend?.routeNotes">Novedades:
+                  {{ friend?.routeNotes }} </span>
+                <app-text-shell *ngIf="!friend?.routeNotes" animation="bouncing"
+                  [data]="friend?.routeNotes"></app-text-shell>
+              </h5>
+            </div>
+          </ion-col>
+          
+        </ion-row>
+      </ion-item>
+    </ion-item-sliding>
+  </ng-template>
+
+  <ng-template #equipmentItem let-equipment="equipment">
+    <ion-item-sliding>
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="removeEquipment(equipment, equipment?.verified)">
+          REMOVER
+        </ion-item-option>
+
+        <ion-item-option (click)="openValidationPage(equipment?.equipmentId)">
+          VALIDAR
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item>
+
+        <ion-row class="user-details-section">
+          <ion-col class="user-image-wrapper" size="3">
+            <app-aspect-ratio [ratio]="{w:1, h:1}">
+              <app-image-shell class="user-image" animation="spinner" [src]="equipment?.initialPhoto"
+                [alt]="'friend'"></app-image-shell>
+            </app-aspect-ratio>
+            <ion-col class="user-actions-wrapper">
+              <span class="user-membership" *ngIf="equipment?.verified">
+                <app-text-shell [data]="'VERIFICADO'"></app-text-shell>
+              </span>
+              <span class="user-membership-disabled" *ngIf="!equipment?.verified">
+                <app-text-shell [data]="'PENDIENTE'"></app-text-shell>
+              </span>
+            </ion-col>
+          </ion-col>
+          <ion-col class="user-data-wrapper">
+            <div class="user-info">
+              <h3 class="user-name">
+                <app-text-shell animation="bouncing" [data]="equipment?.equipmentName"></app-text-shell>
+              </h3>
+              <h5 class="user-job">
+                <app-text-shell animation="bouncing" [data]="equipment?.equipmentDescription"></app-text-shell>
+              </h5>
+            </div>
+          </ion-col>
+          
+        </ion-row>
+      </ion-item>
+    </ion-item-sliding>
+  </ng-template>
+
+  <section [hidden]="segmentValue !== 'friends'">
+    <ion-list class="friends-list" *ngIf="data?.items?.length > 0">
+      <ion-item class="friend-item" *ngFor="let friend of data?.items | filtroEmpleado: this.searchQuery">
+        <ng-container *ngTemplateOutlet="friendItem; context: { friend: friend }"></ng-container>
+      </ion-item>
+    </ion-list>
+
+
+    <ion-list class="friends-list" *ngIf="dataE?.items?.length > 0">
+      <ion-item class="friend-item" *ngFor="let friend of dataE?.items">
+        <ng-container *ngTemplateOutlet="equipmentItem; context: { equipment: friend }"></ng-container>
+      </ion-item>
+    </ion-list>
+
+
+
+    <!-- <ng-container *ngIf="data?.items && (data?.items | filtroEmpleado: this.searchQuery).length  === 0">
+      <ion-slides [options]="sliderOptions">
+
+        <ion-slide class="animate__animated animate__fadeIn">
+          <div class="slide animated fadeIn slow">
+            <img class="imagen" src="../../../assets/card.svg">
+            <h2>Ups! Sin Empleados.</h2>
+            <p class="ion-text-center">No se encontraron empleados con coincidencias.</p>
+          </div>
+        </ion-slide>
+    
+      </ion-slides>
+    </ng-container> -->
+  </section>
+
+
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="secondary" (click)="openOptions()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar *ngIf="(this.details?.statusId?.statusId === 4  || this.details?.statusId?.statusId === 2) && this.details?.statusId?.statusId !== 10">
+    <ion-button color="secondary" class="submit-btn" type="submit" expand="block" fill="solid" (click)="startEndRoute('start')">Empezar
+      Ruta</ion-button>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="this.details?.statusId?.statusId === 9 && this.details?.statusId?.statusId !== 10">
+    <ion-button color="primary" class="submit-btn" type="submit" expand="block" fill="solid" (click)="startEndRoute('finish')">finalizar
+      Ruta</ion-button>
+  </ion-toolbar>
+</ion-footer>

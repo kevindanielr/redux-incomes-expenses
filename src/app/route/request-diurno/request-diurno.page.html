@@ -1,0 +1,292 @@
+<ion-toolbar color="primary" class="ion-text-uppercase">
+  <ion-button slot="start" fill="clear" color="light" (click)="dismiss()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <h6>SOLICITUD DE SERVICIO DIURNO</h6>
+</ion-toolbar>
+
+<ion-content class="user-friends-content" style="height: 95% !important">
+
+  <div class="forms-validations-content">
+    <form class="validations-form" [formGroup]="validationsForm" (ngSubmit)="onSubmit()">
+      <ion-list class="inputs-list" lines="full">
+        <ion-list-header>
+          <ion-label class="header-title">INFORMACIÓN DE SOLICITUD DE SERVICIO</ion-label>
+        </ion-list-header>
+
+        <ion-item class="input-item item-label-floating" formGroupName="companyId" *ngIf="this.typeUser === 3 || this.typeUser === 4 || this.typeUser === 5">
+          <ion-label position="floating">Compañia</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione"
+            formControlName="companyId">
+            <ion-select-option *ngFor="let item of companys" [value]="item.companyId">{{ item.companyName }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="companyIdNoValido">
+            <ion-icon name="information-circle"></ion-icon> Seleccione una compañia.
+          </ion-label>
+        </ion-text>
+
+        <ion-item class="input-item item-label-floating" formGroupName="tripTypeId">
+          <ion-label position="floating">Tipo de viaje</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione"
+            formControlName="tripTypeId" (ionChange)="changeTripType( $event )">
+            <ion-select-option *ngFor="let item of typesTrip" [value]="item.tripTypeId">{{ item.tripName }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="tripTypeNoValido">
+            <ion-icon name="information-circle"></ion-icon> Seleccione el tipo de viaje de la solicitud.
+          </ion-label>
+        </ion-text>
+
+        <!-- Datetime in popover with cover element -->
+        <ion-item button="true" id="open-date-input" class="input-item birthdate-item">
+          <ion-label color="secondary" position="stacked">Fecha de solicitud</ion-label>
+          <ion-text class="placeholder" *ngIf="dateValue === ''">Seleccione una fecha</ion-text>
+          <ion-text class="placeholder" *ngIf="dateValue !== ''">{{ dateValue | date: 'medium' }}</ion-text>
+          <ion-popover trigger="open-date-input" show-backdrop="false">
+            <ng-template>
+              <ion-datetime #popoverDatetime presentation="date-time" formControlName="date"
+                (ionChange)="dateValue = this.validationsForm.controls.date.value"></ion-datetime>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="dateNoValido">
+            <ion-icon name="information-circle"></ion-icon> La fecha es requerida.
+          </ion-label>
+        </ion-text>
+
+        <ion-item class="input-item terms-item">
+          <ion-label>Con ruta existente</ion-label>
+          <ion-checkbox [(checked)]="valueCheck" (ionChange)="changeChkbox( $event )"></ion-checkbox>
+        </ion-item>
+
+        <ion-item class="input-item item-label-floating" formGroupName="routeId">
+          <ion-label position="floating">Ruta</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione"
+            formControlName="routeId">
+            <ion-select-option *ngFor="let item of routes" [value]="item.routeId">{{ item.routeName }} - {{ item.routeDestinationCity }} - {{ item.routeDestinationPlace }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="routeIdNoValido">
+            <ion-icon name="information-circle"></ion-icon> Seleccione una ruta.
+          </ion-label>
+        </ion-text>
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Lugar de origen</ion-label>
+          <ion-textarea rows="2" cols="20" placeholder="Ingrese aquí la dirección de origen ..." formControlName="from">
+          </ion-textarea>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="fromNoValido">
+            <ion-icon name="information-circle"></ion-icon> Lugar de origen de la solicitud es requerido.
+          </ion-label>
+        </ion-text>
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Lugar de destino</ion-label>
+          <ion-textarea rows="2" cols="20" placeholder="Ingrese aquí la dirección de destino ..." formControlName="to">
+          </ion-textarea>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="toNoValido">
+            <ion-icon name="information-circle"></ion-icon> Lugar de destino de la solicitud es requerido.
+          </ion-label>
+        </ion-text>
+
+        
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Notas</ion-label>
+          <ion-textarea formControlName="notes" rows="4" cols="20"
+            value="*Al ingresar a la unidad, es importante portar en todo momento la mascarilla">
+          </ion-textarea>
+        </ion-item>
+      </ion-list>
+
+    </form>
+
+  </div>
+
+  <div *ngIf="isSaveRequest">
+
+    <div class="class notifications-content animate__animated animate__fadeIn" *ngIf="this.typeTripSelected === 4 || this.typeTripSelected === 5">
+      <ion-item-divider sticky="true">
+        <ion-label>LISTA DE EMPLEADOS</ion-label>
+      </ion-item-divider>
+    
+      <ion-searchbar placeholder="Búsqueda por empleado" class="friends-searchbar" animated [(ngModel)]="searchQuery"></ion-searchbar>
+      <ng-container *ngIf="data?.items && (data?.items | filtroEmpleado: this.searchQuery).length  > 0">
+        <ion-item-group>
+          <ion-item class="notification-item" lines="none" *ngFor="let emp of data?.items | filtroEmpleado: this.searchQuery">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="emp?.employeeId?.employeePhoto" [alt]="'user image'">
+                  </app-image-shell>
+                  <!-- <img [src]="notification.image" class="notification-image" alt=""> -->
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell *ngIf="!emp?.employeeId?.employeeFirstName" animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell *ngIf="!emp?.employeeId?.employeeFirstName" animation="bouncing" style="width: 30%;"></app-text-shell>
+                <h2 class="details-name" *ngIf="emp?.employeeId?.employeeFirstName">{{ emp?.employeeId?.employeeFirstName }} {{ emp?.employeeId?.employeeLastName }} </h2>
+                <p class="details-description" *ngIf="emp?.employeeId?.employeeFirstName">ID: {{ emp?.employeeId?.employeeNumber }}</p>
+              </ion-col>
+              <ion-col size="4" >
+                <ion-button class="user-action" expand="block" size="small" color="light" *ngIf="emp?.employeeId?.employeeFirstName" (click)="deleteEmployee( emp?.employeeId?.employeeId )">Remover</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+        </ion-item-group>
+      </ng-container>
+      <ng-container *ngIf="employee === null">
+        <ion-item-group>
+          <ion-item class="notification-item" lines="none">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                  </app-image-shell>
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+          <ion-item class="notification-item" lines="none">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                  </app-image-shell>
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+        </ion-item-group>
+      </ng-container>
+  
+      <ng-container *ngIf="data?.items && (data?.items | filtroEmpleado: this.searchQuery).length  === 0">
+        <ion-slides [options]="sliderOptions">
+  
+          <ion-slide class="animate__animated animate__fadeIn">
+            <div class="slide animated fadeIn slow">
+              <img class="imagen" src="../../../assets/card.svg">
+              <h2>Ups! Sin Empleados.</h2>
+              <p class="ion-text-center desc">No se encontraron empleados en esta ruta.</p>
+            </div>
+          </ion-slide>
+      
+        </ion-slides>
+      </ng-container>
+    </div>
+  
+    <div class="class notifications-content animate__animated animate__fadeIn" *ngIf="this.typeTripSelected === 4 || this.typeTripSelected === 6">
+      <ion-item-divider sticky="true">
+        <ion-label>LISTA DE EQUIPOS</ion-label>
+      </ion-item-divider>
+      <ng-container *ngIf="dataEquipment?.items.length > 0">
+        <ion-item-group>
+          <ion-item class="notification-item" lines="none" *ngFor="let equip of dataEquipment?.items">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="equip?.initialPhoto" [alt]="'user image'">
+                  </app-image-shell>
+                  <!-- <img [src]="notification.image" class="notification-image" alt=""> -->
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell *ngIf="!equip?.equipmentName" animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell *ngIf="!equip?.equipmentDescription" animation="bouncing" style="width: 30%;"></app-text-shell>
+                <h2 class="details-name" *ngIf="equip?.equipmentName">{{ equip?.equipmentName }}</h2>
+                <p class="details-description" *ngIf="equip?.equipmentDescription">{{ equip?.equipmentDescription }}</p>
+              </ion-col>
+              <ion-col size="4" >
+                <ion-button class="user-action" expand="block" size="small" color="light" *ngIf="equip?.equipmentId" (click)="deleteEquipment( equip?.equipmentId )">Remover</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+        </ion-item-group>
+      </ng-container>
+      <ng-container *ngIf="employee === null">
+        <ion-item-group>
+          <ion-item class="notification-item" lines="none">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                  </app-image-shell>
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+          <ion-item class="notification-item" lines="none">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                  </app-image-shell>
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+        </ion-item-group>
+      </ng-container>
+  
+      <ng-container *ngIf="dataEquipment?.items.length <= 0">
+        <ion-slides [options]="sliderOptions">
+  
+          <ion-slide class="animate__animated animate__fadeIn">
+            <div class="slide animated fadeIn slow">
+              <img class="imagen" src="../../../assets/laptop.svg">
+              <h2>Ups! Sin Equipos.</h2>
+              <p class="ion-text-center desc">No se encontraron equipos en esta ruta.</p>
+            </div>
+          </ion-slide>
+      
+        </ion-slides>
+      </ng-container>
+    </div>
+
+  </div>
+
+
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed" *ngIf="isSaveRequest" class="animate__animated animate__bounceIn">
+    <ion-fab-button color="secondary" (click)="openOptions()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" fill="solid" color="primary" (click)="onSubmit()" *ngIf="!isSaveRequest">
+      AGREGAR SOLICITUD
+    </ion-button>
+    <ion-button expand="block" fill="solid" color="primary" (click)="onSubmit()" *ngIf="isSaveRequest">
+      MODIFICAR SOLICITUD
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
+

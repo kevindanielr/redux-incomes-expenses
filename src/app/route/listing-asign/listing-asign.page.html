@@ -1,0 +1,202 @@
+<ion-toolbar color="primary" class="ion-text-uppercase">
+  <ion-button slot="start" fill="clear" color="light" (click)="closeModal()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <h6>ASIGNACIÓN DE RUTA</h6>
+</ion-toolbar>
+
+<ion-content class="user-friends-content">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+  
+  
+    <ion-card *ngIf="this.dataRoute?.routeId !== null">
+      <ion-card-header>
+        <app-text-shell *ngIf="this.numberAssigned === null" animation="bouncing" [data]="''"></app-text-shell>
+        <ion-card-subtitle *ngIf="this.numberAssigned !== null ">Información general de la Ruta</ion-card-subtitle>
+        <ion-card-title *ngIf="this.numberAssigned !== null ">{{ dataRoute?.routeId?.routeName }} - {{ dataRoute?.routeId?.routeDestinationCity }}</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+
+        <ion-grid *ngIf="this.numberAssigned === null">
+          <ion-row>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid *ngIf="this.numberAssigned !== null">
+          <ion-row>
+            <ion-col>
+              <ion-icon name="time-outline"></ion-icon> Salida: {{ dataRoute?.routeId?.routeHour | date: 'shortTime' }}
+            </ion-col>
+            <ion-col>
+              <ion-icon name="people-outline"></ion-icon> Empleados: {{ dataRoute?.lstRouteEmployees?.length }}
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-icon name="person-outline"></ion-icon> Asignados: 
+              <ion-badge mode="ios" color="success">
+                {{ this.numberAssigned }}
+              </ion-badge>
+            </ion-col>
+            <ion-col>
+              <ion-icon name="person-outline"></ion-icon> Sin asignar: 
+              <ion-badge mode="ios" color="warning">
+                {{ this.numberNotAssigned }}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="this.dataRoute?.routeId === null">
+      <ion-card-header>
+        <app-text-shell *ngIf="this.numberAssigned === null" animation="bouncing" [data]="''"></app-text-shell>
+        <ion-card-subtitle *ngIf="this.numberAssigned !== null ">Información general de la Ruta</ion-card-subtitle>
+        <ion-card-title *ngIf="this.numberAssigned !== null ">{{ dataRoute?.from }} - {{ dataRoute?.to }}</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+
+        <ion-grid *ngIf="this.numberAssigned === null">
+          <ion-row>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+            <ion-col>
+              <app-text-shell animation="bouncing" [data]="''"></app-text-shell>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid *ngIf="this.numberAssigned !== null">
+          <ion-row>
+            <ion-col>
+              <ion-icon name="time-outline"></ion-icon> Salida: {{ dataRoute?.date | date: 'shortTime' }}
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-icon name="person-outline"></ion-icon> Asignados: 
+              <ion-badge mode="ios" color="success">
+                {{ this.numberAssigned }}
+              </ion-badge>
+            </ion-col>
+            <ion-col>
+              <ion-icon name="person-outline"></ion-icon> Empleados N/A: 
+              <ion-badge mode="ios" color="warning">
+                {{ this.numberNotAssigned }}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-icon name="laptop-outline"></ion-icon> Equipos: 
+              <ion-badge mode="ios" color="success">
+                {{ this.equipmentAssigned }}
+              </ion-badge>
+            </ion-col>
+            <ion-col>
+              <ion-icon name="laptop-outline"></ion-icon> Equipos N/A: 
+              <ion-badge mode="ios" color="warning">
+                {{ this.equipmentNotAssigned }}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+  <ion-row class="description-row">
+    <ion-col size="12">
+        <ion-button class="submit-btn" type="submit" expand="block" fill="solid" [disabled]="!(this.numberAssigned !== null || this.numberAssigned !== undefined)" (click)="openModalAsignRoute()">ASIGNAR RUTA</ion-button>
+    </ion-col>
+  </ion-row>
+
+  
+  <ion-searchbar placeholder="Búsqueda por conductor" class="friends-searchbar" animated [(ngModel)]="searchQuery"></ion-searchbar>
+  <ng-template #friendItem let-friend="friend">
+    <ion-row class="user-details-section">
+      <ion-col class="user-image-wrapper" size="2">
+        <app-aspect-ratio [ratio]="{w:1.3, h:1}">
+          <app-image-shell class="user-image" animation="spinner" [src]="friend?.transportUnitId?.transportImage" [alt]="'friend'"></app-image-shell>
+        </app-aspect-ratio>
+      </ion-col>
+      <ion-col class="user-data-wrapper" (click)="openModalAsignRoute(friend)">
+        <div class="user-info">
+          <h3 class="user-name">
+            <app-text-shell animation="bouncing" [data]="friend?.driverId?.userId?.userName"></app-text-shell>
+          </h3>
+          <h5 class="user-place">
+            <span *ngIf="friend?.driverId?.driverLicense !== null">Licencia: {{ friend?.driverId?.driverLicense }} </span>
+            <!-- <app-text-shell *ngIf="friend?.driverId?.driverLicense === null" animation="bouncing" [data]="friend?.driverId?.driverLicense"></app-text-shell> -->
+          </h5>
+          <h5 class="user-unit">
+            <span *ngIf="friend?.transportUnitId?.licensePlate !== null">Placa vehiculo: {{ friend?.transportUnitId?.licensePlate }} </span>
+            <app-text-shell *ngIf="friend?.transportUnitId?.licensePlate === null" animation="bouncing" [data]="friend?.transportUnitId?.licensePlate"></app-text-shell>
+          </h5>
+          <h5 class="user-job">
+            <span *ngIf="friend?.transportUnitId?.unitNumber">No. Unidad: {{ friend?.transportUnitId?.unitNumber }} </span>
+            <app-text-shell *ngIf="!friend?.transportUnitId?.unitNumber" animation="bouncing" [data]="friend?.transportUnitId?.unitNumber"></app-text-shell>
+          </h5>
+        </div>
+      </ion-col>
+      <ion-col class="user-actions-wrapper">
+        <ion-button class="user-action" expand="block" size="small" color="light" *ngIf="friend?.driverId?.userId?.userName" (click)="deleteTransportUnit(friend?.routeTransportUnitId)">Remover</ion-button>
+      </ion-col>
+    </ion-row>
+  </ng-template>
+
+  <section>
+    <ion-list class="friends-list" *ngIf="data?.items?.length > 0">
+      <ion-item class="friend-item" *ngFor="let friend of data?.items | filtroAsign: this.searchQuery">
+        <ng-container *ngTemplateOutlet="friendItem; context: { friend: friend }"></ng-container>
+      </ion-item>
+    </ion-list>
+    <ng-container *ngIf="data?.items && (data?.items | filtroAsign: this.searchQuery).length  === 0">
+      <ion-slides [options]="sliderOptions">
+
+        <ion-slide class="animate__animated animate__fadeIn">
+          <div class="slide animated fadeIn slow">
+            <img class="imagen" src="../../../assets/car.svg">
+            <h2>Ups! Sin Conductores.</h2>
+            <p class="ion-text-center">No se encontraron conductores con rutas asignadas.</p>
+          </div>
+        </ion-slide>
+    
+      </ion-slides>
+    </ng-container>
+  </section>
+
+</ion-content>

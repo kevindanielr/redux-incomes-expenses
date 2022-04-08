@@ -1,0 +1,37 @@
+:host-context(.ios) {
+  .user-friends-segment {
+    --background: var(--page-segment-background);
+    padding: var(--page-margin);
+
+    ion-segment-button {
+      --color-checked: var(--ion-color-light);
+    }
+  }
+
+  ion-searchbar.friends-searchbar {
+    padding-top: 0px;
+  }
+}
+
+.item-icon {
+  width: 120px;
+  align-self: center;
+  margin-bottom: 24px;
+}
+
+ion-fab-button[data-desc] {
+  position: relative;
+}
+
+ion-fab-button[data-desc]::after {
+  position: absolute;
+  content: attr(data-desc);
+  z-index: 1;
+  right: 55px;
+  bottom: 4px;
+  background-color: black;
+  padding: 9px;
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+}

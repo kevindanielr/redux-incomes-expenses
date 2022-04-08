@@ -1,0 +1,160 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <h6>SOLICITUDES DE SERVICIO VIP</h6>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="filters-toolbar">
+    <ion-row class="searchbar-row" align-items-center>
+      <ion-col>
+        <ion-searchbar class="items-searchbar" animated  placeholder="Búsqueda" (ionInput)="obtenerItems($event)"></ion-searchbar>
+      </ion-col>
+      <!-- <ion-col class="call-to-action-col" *ngIf="typeUser !== 6">
+        <ion-button fill="clear" color="secondary" class="filters-btn" (click)="showFilter = !showFilter">
+          <ion-icon slot="icon-only" name="options"></ion-icon>
+        </ion-button>
+      </ion-col> -->
+    </ion-row>
+      <!-- <ion-row class="range-item-row animate__animated animate__fadeInDown" [hidden]="!showFilter" *ngIf="typeUser !== 6">
+        <ion-col size="12">
+          <div class="range-header">
+            <span class="range-label">Filtrar por empresa</span>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <ion-item class="input-item item-label-floating">
+            <ion-label position="floating">EMPRESAS</ion-label>
+            <ion-select  cancelText="Cancelar" okText="OK" [disabled]="this.companys?.lenght > 0 ? true: false" (ionChange)="changeCompany( $event )">
+              <ion-select-option *ngFor="let item of this.companys" [value]="item.companyId">{{ item.companyName }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" >
+          <ion-item class="input-item item-label-floating">
+            <ion-label position="floating">CUENTA</ion-label>
+            <ion-select  cancelText="Cancelar" okText="OK" [disabled]="flagAccount">
+              <ion-select-option *ngFor="let item of this.accounts" [value]="item.accountId">{{ item.accountName }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row> -->
+
+      <ion-row class="description-row">
+        <ion-col size="12">
+            <ion-button class="submit-btn" type="submit" expand="block" fill="solid" (click)="openModalRequestExpress(undefined, false)" >NUEVA SOLICITUD</ion-button>
+        </ion-col>
+      </ion-row>
+      
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="deals-listing-content">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ng-container *ngIf="listing?.items">
+    <div class="listing-item" *ngFor="let item of listing?.items | filtroDiurno: this.searchQuery">
+      <ion-row class="top-row">
+        <ion-col class="logo-col" size="6">
+        </ion-col>
+        <ion-col class="call-to-action-col" *ngIf="item.expressRequestId">
+          <ion-button class="claim-button" expand="block" color="secondary" (click)="openModalRequestExpress(item.expressRequestId, true, item)">
+            <span class="button-cta">VER SOLICITUD</span>
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col  *ngIf="((item.date | appTimeDifference) >= 0)" class="call-to-action-col">
+          <span class="expired-cta">{{ item?.statusId?.statusName | uppercase }}</span>
+        </ion-col>
+        <ion-col *ngIf="((item.date | appTimeDifference) < 0)" class="call-to-action-col">
+          <span class="expired-cta">EXPIRADO</span>
+        </ion-col>
+      </ion-row>
+      <ion-row class="middle-row">
+        <ion-col class="info-col">
+          <p class="item-description">
+            <!-- <ion-icon name="location-outline"></ion-icon> -->
+            <app-text-shell animation="bouncing" lines="3" *ngIf="!item.from"></app-text-shell>
+          </p>
+          <p class="item-description" *ngIf="item.from">
+            <ion-icon name="location-outline"></ion-icon>
+            Cliente: {{ item?.expressUserId?.name }}
+          </p>
+          <p class="item-description" *ngIf="item.from">
+            <ion-icon name="location-outline"></ion-icon>
+            Desde: {{ item.from }}
+          </p>
+          <p class="item-description" *ngIf="item.to">
+            <ion-icon name="flag-outline"></ion-icon>
+            Hasta: {{ item.to }}
+          </p>
+          <p class="item-description" *ngIf="item.to">
+            <ion-icon name="analytics-outline"></ion-icon>
+            Tipo de viaje: Servicio Express
+          </p>
+          <p class="item-description" *ngIf="item.tipoVehiculo">
+            <ion-icon name="car-sport-outline"></ion-icon>
+            Tipo de vehiculo: {{ item.tipoVehiculo }}
+          </p>
+          <p class="item-description" *ngIf="item.formaPago">
+            <ion-icon name="wallet-outline"></ion-icon>
+            Tipo de pago: {{ item.formaPago }}
+          </p>
+          <p class="item-description" *ngIf="item.to">
+            <ion-icon name="analytics-outline"></ion-icon>
+            Notas: {{ item.notes }}
+          </p>
+        </ion-col>
+        <ion-col size="2">
+          <ion-button class="bookmark-button" expand="block" fill="clear" color="secondary">
+            <ion-icon slot="icon-only" name="car-sport-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="bottom-row" >
+        <ion-col class="code-wrapper">
+          <ion-button  class="rechazo-button" expand="block" color="primary" *ngIf="((item.date | appTimeDifference) >= 0) && item.date && (this.typeUser !== 6) ">
+            <span class="button-rechazar" (click)="rechazarRequest()">Rechazar</span>
+            <ion-icon slot="end" name="close-circle-outline"></ion-icon>
+          </ion-button>
+
+          <ion-button  class="rechazo-button" expand="block" color="primary" *ngIf="this.typeUser === 6 && item.date">
+            <span class="button-rechazar" (click)="deleteRequest( item.expressRequestId )">Eliminar</span>
+            <ion-icon slot="end" name="trash-outline"></ion-icon>
+          </ion-button>
+
+        </ion-col>
+        <ion-col class="time-left-wrapper" size="5" [ngClass]="{'countdown-active': ((item.expirationDate | appTimeDifference) > 0 && (item.expirationDate | appTimeDifference) <= 2)}">
+          <span class="expiration-cta">SOLICITUD PARA:</span>
+          <ng-container>
+            <span class="item-time-left">
+              <app-text-shell [data]="item.date | date: 'medium'"></app-text-shell>
+            </span>
+          </ng-container>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ng-container *ngIf="listing?.items && (listing?.items | filtroDiurno: this.searchQuery).length  === 0">
+      <ion-slides [options]="sliderOptions">
+
+        <ion-slide class="animate__animated animate__fadeIn">
+          <div class="slide animated fadeIn slow">
+            <img class="imagen" src="../../../assets/direction.svg">
+            <h2>Ups! Sin Solicitudes.</h2>
+            <p class="ion-text-center desc">No se encontraron solicitudes express.</p>
+          </div>
+        </ion-slide>
+    
+      </ion-slides>
+    </ng-container>
+
+  </ng-container>
+</ion-content>

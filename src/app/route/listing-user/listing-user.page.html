@@ -1,0 +1,90 @@
+<ion-toolbar color="primary" class="ion-text-uppercase">
+  <ion-button slot="start" fill="clear" color="light" (click)="closeModal()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <h6>LISTA DE EMPLEADOS EN RUTA</h6>
+</ion-toolbar>
+
+<ion-content class="user-friends-content">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-row class="description-row">
+    <ion-col size="12">
+        <ion-button class="submit-btn" type="submit" expand="block" fill="solid" (click)="approvedList()" [disabled]="this.dataRoute?.approved">{{ !this.dataRoute?.approved ? 'APROBAR LISTA' : 'LISTA APROBADA'}}</ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ion-searchbar placeholder="Búsqueda" class="friends-searchbar" animated [(ngModel)]="searchQuery"></ion-searchbar>
+
+  <ng-template #friendItem let-friend="friend">
+    <ion-row class="user-details-section">
+      <ion-col class="user-image-wrapper" size="2">
+        <app-aspect-ratio [ratio]="{w:1, h:1}">
+          <app-image-shell class="user-image" animation="spinner" [src]="friend?.employeeId?.employeePhoto" [alt]="'friend'"></app-image-shell>
+        </app-aspect-ratio>
+      </ion-col>
+      <ion-col class="user-data-wrapper">
+        <div class="user-info">
+          <h3 class="user-name">
+            <app-text-shell animation="bouncing" [data]="friend?.employeeId?.employeeFirstName"></app-text-shell>
+          </h3>
+          <h5 class="user-job" *ngIf="friend?.employeeId?.employeeLastName !== null">
+            <app-text-shell animation="bouncing" [data]="friend?.employeeId?.employeeLastName"></app-text-shell>
+          </h5>
+          <h5 class="user-job">
+            <span *ngIf="friend?.employeeId?.employeeNumber">No ID: {{ friend?.employeeId?.employeeNumber }} </span>
+            <app-text-shell *ngIf="!friend?.employeeId?.employeeNumber" animation="bouncing" [data]="friend?.employeeId?.employeeNumber"></app-text-shell>
+          </h5>
+          <h5 class="user-job1">
+            <span *ngIf="friend?.employeeId?.companyId?.companyName">Compañia: {{ friend?.employeeId?.companyId?.companyName }} </span>
+            <app-text-shell *ngIf="!friend?.employeeId?.companyId?.companyName" animation="bouncing" [data]="friend?.employeeId?.companyId?.companyName"></app-text-shell>
+          </h5>
+          <h5 class="user-job2">
+            <span *ngIf="friend?.employeeId?.accountId?.accountName">Cuenta: {{ friend?.employeeId?.accountId?.accountName }} </span>
+            <app-text-shell *ngIf="!friend?.employeeId?.accountId?.accountName" animation="bouncing" [data]="friend?.employeeId?.accountId?.accountName"></app-text-shell>
+          </h5>
+          <h5 class="user-job2" *ngIf="friend?.employeeId?.employeeAddress !== null">
+            <span *ngIf="friend?.employeeId?.employeeAddress">Dirección: {{ friend?.employeeId?.employeeAddress }} </span>
+            <app-text-shell *ngIf="!friend?.employeeId?.employeeAddress" animation="bouncing" [data]="friend?.employeeId?.employeeAddress"></app-text-shell>
+          </h5>
+        </div>
+      </ion-col>
+      <ion-col class="user-actions-wrapper">
+        <ion-button class="user-action" expand="block" size="small" color="light" *ngIf="friend?.employeeId?.employeeId" (click)="deleteEmployee( friend?.employeeId?.employeeId )">Remover</ion-button>
+      </ion-col>
+    </ion-row>
+  </ng-template>
+
+  <section [hidden]="segmentValue !== 'friends'">
+    <ion-list class="friends-list" *ngIf="data?.items && (data?.items | filtroEmpleado: this.searchQuery).length  > 0">
+      <ion-item class="friend-item" *ngFor="let friend of data?.items | filtroEmpleado: this.searchQuery">
+        <ng-container *ngTemplateOutlet="friendItem; context: { friend: friend }"></ng-container>
+      </ion-item>
+    </ion-list>
+    <ng-container *ngIf="data?.items && (data?.items | filtroEmpleado: this.searchQuery).length  === 0">
+      <ion-slides [options]="sliderOptions">
+
+        <ion-slide class="animate__animated animate__fadeIn">
+          <div class="slide animated fadeIn slow">
+            <img class="imagen" src="../../../assets/card.svg">
+            <h2>Ups! Sin Empleados.</h2>
+            <p class="ion-text-center">No se encontraron empleados con coincidencias.</p>
+          </div>
+        </ion-slide>
+    
+      </ion-slides>
+    </ng-container>
+  </section>
+
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed" *ngIf="!this.dataRoute?.approved">
+    <ion-fab-button color="secondary" (click)="openOptions()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

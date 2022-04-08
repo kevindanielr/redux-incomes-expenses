@@ -1,0 +1,30 @@
+{
+    "today":[
+      {
+        "name": "Shalom App",
+        "image": "./assets/sample-images/notifications/shalomApp.png",
+        "message": "Tu ruta saldra a las 9:00 P.M",
+        "date": "5:03 pm"
+      },
+      {
+        "name": "Shalom App",
+        "image": "./assets/sample-images/notifications/shalomApp.png",
+        "message": "Has seleccionado la Ruta: Metrocentro - 8va Etapa",
+        "date": "3:03 pm"
+      },
+      {
+        "name": "Shalom App",
+        "image": "./assets/sample-images/notifications/shalomApp.png",
+        "message": "No te olvides de seleccionar una ruta, es importante reservar tu cupo",
+        "date": "12:00 pm"
+      }
+    ],
+    "yesterday":[
+      {
+        "name": "Shalom App",
+        "image": "./assets/sample-images/notifications/shalomApp.png",
+        "message": "Has seleccionado la Ruta: Metrocentro - 8va Etapa",
+        "date": "3:03 pm"
+      }
+  ]
+}

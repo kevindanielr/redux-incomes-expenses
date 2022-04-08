@@ -1,0 +1,396 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <h6>RUTAS DISPONIBLES</h6>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="filters-toolbar">
+    <ion-row class="searchbar-row" align-items-center>
+      <ion-col>
+        <ion-searchbar class="items-searchbar" animated  placeholder="Búsqueda" (ionInput)="obtenerItems($event)"></ion-searchbar>
+        <!-- <ion-searchbar #search color="light" placeholder="Buscar Contacto" type="text" debounce="5000" ></ion-searchbar> -->
+      </ion-col>
+      <!-- <ion-col class="call-to-action-col" *ngIf="typeUser === 4 || typeUser === 3">
+        <ion-button fill="clear" color="secondary" class="filters-btn" (click)="showFilter = !showFilter">
+          <ion-icon slot="icon-only" name="options"></ion-icon>
+        </ion-button>
+      </ion-col> -->
+    </ion-row>
+      <!-- <ion-row class="range-item-row animate__animated animate__fadeInDown" [hidden]="!showFilter" *ngIf="typeUser === 4 || typeUser === 3">
+        <ion-col size="12">
+          <div class="range-header">
+            <span class="range-label">Filtrar por empresa</span>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <ion-item class="input-item item-label-floating">
+            <ion-label position="floating">EMPRESAS</ion-label>
+            <ion-select formControlName="country" cancelText="Cancelar" okText="OK" [disabled]="this.companys?.lenght > 0 ? true: false" (ionChange)="changeCompany( $event )">
+              <ion-select-option *ngFor="let item of this.companys" [value]="item.companyId">{{ item.companyName }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" >
+          <ion-item class="input-item item-label-floating">
+            <ion-label position="floating">CUENTA</ion-label>
+            <ion-select formControlName="country" cancelText="Cancelar" okText="OK" [disabled]="flagAccount">
+              <ion-select-option *ngFor="let item of this.accounts" [value]="item.accountId">{{ item.accountName }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!this.isMyRoute">
+  
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+  
+  <ng-container *ngIf="listing?.items">
+    <div class="listing-item" *ngFor="let item of listing?.items | filtroBusqueda: this.searchQuery">
+      <ion-row class="image-row">
+        <ion-col size="12">
+          <a>
+            <app-image-shell [display]="'cover'" animation="spinner" class="add-overlay item-image" [src]="item?.routeId?.routeImage" (click)="showRoute(item?.scheduleRouteId, item?.routeTransportUnitId)" >
+              <app-aspect-ratio [ratio]="{w:4, h:2}">
+                <div class="content-inside-item-image">
+                  <div class="item-icon" *ngIf="item?.routeId?.routeImage">
+                    <app-aspect-ratio animation="spinner" [ratio]="{w:4, h:4}">
+                      <app-image-shell [src]="'./assets/sample-images/route/route.png'" class="icon-image"></app-image-shell>
+                    </app-aspect-ratio>
+                  </div>
+                  <div class="item-cta" *ngIf="item?.routeId?.routeImage">
+                    <span>Ver ruta</span>
+                    <ion-icon class="cta-icon" name="arrow-forward"></ion-icon>
+                  </div>
+                </div>
+              </app-aspect-ratio>
+            </app-image-shell>
+          </a>
+        </ion-col>
+      </ion-row>
+      <ion-row class="info-row">
+        <ion-col class="main-info-col">
+          <h3 class="item-name">
+            <a class="name-anchor">
+              <app-text-shell animation="bouncing" [data]="(item?.routeId?.routeName) ? (item?.routeId?.routeName) : (item?.routeId?.name)"></app-text-shell>
+            </a>
+          </h3>
+          <p class="item-description">
+            <app-text-shell animation="bouncing" [data]="(item?.routeId?.routeDestinationCity && item?.routeId?.routeDestinationPlace) ? (item?.routeId?.routeDestinationCity + ' - ' + item?.routeId?.routeDestinationPlace) : (item?.routeId?.routeDestinationCity)" lines="3"></app-text-shell>
+          </p>
+          <p class="item-address">
+            <app-text-shell animation="bouncing" [data]="item?.routeId?.routeNotes"></app-text-shell>
+          </p>
+        </ion-col>
+      </ion-row>
+      <ion-row class="stats-row">
+        <ion-col size="3" class="item-rating">
+          <span class="rating-value">
+            <app-text-shell [data]="item?.routeId?.routeHour | date : 'shortTime'"></app-text-shell>
+          </span>
+          <ion-icon name="time-outline"></ion-icon>
+        </ion-col>
+
+        <ion-col size="3" class="item-rating">
+          <ion-badge color="primary">{{ item?.statusId?.statusName | uppercase }}</ion-badge>
+        </ion-col>
+
+        
+      </ion-row>
+    </div>
+    
+  </ng-container>
+  <ion-slides [options]="sliderOptions"  *ngIf="listing?.items && (listing?.items | filtroBusqueda: this.searchQuery).length  === 0">
+
+    <ion-slide class="animate__animated animate__fadeIn">
+      <div class="slide animated fadeIn slow">
+        <img class="imagen" src="../../../assets/route.svg">
+        <h2>Ups! Sin Rutas.</h2>
+        <p class="ion-text-center">No se encontraron rutas disponibles.</p>
+      </div>
+    </ion-slide>
+
+  </ion-slides>
+</ion-content>
+
+<ion-content *ngIf="this.isMyRoute">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ng-container *ngIf="listing?.items">
+    <div class="listing-item" *ngFor="let item of listing?.items | filtroBusqueda: this.searchQuery: 'MR'">
+
+      <!-- RUTAS NOCTURNAS -->
+      <div *ngIf="!item?.scheduleRouteId?.routeRequestId">
+
+        <ion-row class="image-row">
+          <ion-col size="12">
+            <a>
+              <app-image-shell [display]="'cover'" animation="spinner" class="add-overlay item-image" [src]="item?.scheduleRouteId?.routeId?.routeImage" (click)="showRoute(item?.scheduleRouteId?.scheduleRouteId, item?.routeTransportUnitId)">
+                <app-aspect-ratio [ratio]="{w:4, h:2}">
+                  <div class="content-inside-item-image">
+                    <div class="item-icon" *ngIf="item?.scheduleRouteId?.routeId?.routeImage">
+                      <app-aspect-ratio animation="spinner" [ratio]="{w:4, h:4}">
+                        <app-image-shell [src]="'./assets/sample-images/route/route.png'" class="icon-image"></app-image-shell>
+                      </app-aspect-ratio>
+                    </div>
+                    <div class="item-cta" *ngIf="item?.scheduleRouteId?.routeId?.routeImage">
+                      <span>Ver ruta</span>
+                      <ion-icon class="cta-icon" name="arrow-forward"></ion-icon>
+                    </div>
+                  </div>
+                </app-aspect-ratio>
+              </app-image-shell>
+            </a>
+          </ion-col>
+        </ion-row>
+        <ion-row class="info-row">
+          <ion-col class="main-info-col">
+            <h3 class="item-name">
+              <a class="name-anchor">
+                <app-text-shell animation="bouncing" [data]="(item?.scheduleRouteId?.routeId?.routeName) ? (item?.scheduleRouteId?.routeId?.routeName) : (item?.scheduleRouteId?.routeId?.name)"></app-text-shell>
+              </a>
+            </h3>
+            <p class="item-description">
+              <app-text-shell animation="bouncing" [data]="(item?.scheduleRouteId?.routeId?.routeDestinationCity && item?.scheduleRouteId?.routeId?.routeDestinationPlace) ? (item?.scheduleRouteId?.routeId?.routeDestinationCity + ' - ' + item?.scheduleRouteId?.routeId?.routeDestinationPlace) : (item?.scheduleRouteId?.routeId?.routeDestinationCity)" lines="3"></app-text-shell>
+            </p>
+            <p class="item-address">
+              <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeId?.routeNotes"></app-text-shell>
+            </p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="stats-row">
+          <ion-col size="3" class="item-rating">
+            <span class="rating-value">
+              <app-text-shell [data]="item?.scheduleRouteId?.routeId?.routeHour | date : 'shortTime'"></app-text-shell>
+            </span>
+            <ion-icon name="time-outline"></ion-icon>
+          </ion-col>
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.scheduleRouteId?.routeId?.statusId?.statusName | uppercase }}</ion-badge>
+          </ion-col>
+  
+          <!-- <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col> -->
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.licensePlate | uppercase }}</ion-badge>
+          </ion-col>
+  
+          
+        </ion-row>
+        <ion-row class="stats-row">
+
+          <ion-col size="6" class="item-rating">
+            <ion-badge color="primary" *ngIf="item?.scheduleRouteId?.lstRouteEmployees">{{ item?.scheduleRouteId?.lstRouteEmployees?.length + ' EMPLEADOS' }}</ion-badge>
+          </ion-col>
+  
+          <!-- <ion-col size="6" class="item-rating">
+            <ion-badge color="primary" *ngIf="item?.scheduleRouteId?.lstRouteEmployees">{{ item?.scheduleRouteId?.lstRouteEquipment?.length + ' EQUIPOS' }}</ion-badge>
+          </ion-col> -->
+  
+          <!-- <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col> -->
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary" *ngIf="item?.transportUnitId?.unitNumber">{{'UNIDAD ' + item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col>
+  
+          
+        </ion-row>
+
+      </div>
+
+
+      <!-- RUTAS DIURNAS -->
+
+      <div *ngIf="item?.scheduleRouteId?.routeRequestId">
+
+        <ion-row class="image-row">
+          <ion-col size="12">
+            <a>
+              <app-image-shell [display]="'cover'" animation="spinner" class="add-overlay item-image" [src]="'./assets/diurno.jpg'" (click)="openModalRequestDiurno(item?.scheduleRouteId?.scheduleRouteId, true, item?.scheduleRouteId?.routeRequestId, item?.routeTransportUnitId)">
+                <app-aspect-ratio [ratio]="{w:4, h:2}">
+                  <div class="content-inside-item-image">
+                    <div class="item-icon" *ngIf="item?.scheduleRouteId?.routeRequestId">
+                      <app-aspect-ratio animation="spinner" [ratio]="{w:4, h:4}">
+                        <app-image-shell [src]="'./assets/sample-images/route/route.png'" class="icon-image"></app-image-shell>
+                      </app-aspect-ratio>
+                    </div>
+                    <div class="item-cta" *ngIf="item?.scheduleRouteId?.routeRequestId">
+                      <span>DIURNO</span>
+                      <ion-icon class="cta-icon" name="arrow-forward"></ion-icon>
+                    </div>
+                  </div>
+                </app-aspect-ratio>
+              </app-image-shell>
+            </a>
+          </ion-col>
+        </ion-row>
+        <ion-row class="info-row">
+          <ion-col class="main-info-col">
+            <h3 class="item-name" *ngIf="item?.scheduleRouteId?.routeRequestId?.routeId?.routeId !== null">
+              <a class="name-anchor">
+                <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeRequestId?.routeId?.routeDestinationCity + ' - ' + item?.scheduleRouteId?.routeRequestId?.routeId?.routeDestinationPlace" lines="3"></app-text-shell>
+              </a>
+            </h3>
+            <h3 class="item-name"  *ngIf="item?.scheduleRouteId?.routeRequestId?.from">
+              <a class="name-anchor">
+                <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeRequestId?.from + ' - ' + item?.scheduleRouteId?.routeRequestId?.to" lines="3"></app-text-shell>
+              </a>
+            </h3>
+            <p class="item-address" *ngIf="item?.scheduleRouteId?.routeRequestId?.notes">
+              <app-text-shell animation="bouncing" [data]="item?.scheduleRouteId?.routeRequestId?.notes"></app-text-shell>
+            </p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="stats-row">
+          <ion-col size="3" class="item-rating">
+            <span class="rating-value">
+              <app-text-shell [data]="item?.scheduleRouteId?.routeRequestId?.date | date : 'shortTime'"></app-text-shell>
+            </span>
+            <ion-icon name="time-outline"></ion-icon>
+          </ion-col>
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.scheduleRouteId?.statusId?.statusName | uppercase }}</ion-badge>
+          </ion-col>
+  
+          <!-- <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col> -->
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.licensePlate | uppercase }}</ion-badge>
+          </ion-col>
+  
+          
+        </ion-row>
+        <ion-row class="stats-row">
+  
+          <ion-col size="6" class="item-rating">
+            <ion-badge color="primary" *ngIf="item?.scheduleRouteId?.lstRouteEmployees">{{ item?.scheduleRouteId?.lstRouteEmployees?.length + ' EMPLEADOS' }}</ion-badge>
+          </ion-col>
+  
+          <!-- <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col> -->
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary" *ngIf="item?.transportUnitId?.unitNumber">{{'UNIDAD ' + item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col>
+  
+          
+        </ion-row>
+
+      </div>
+
+    </div>
+
+    <div class="listing-item" *ngFor="let item of expressRequest | filtroBusqueda: this.searchQuery: 'MR'">
+
+      <div>
+
+        <ion-row class="image-row">
+          <ion-col size="12">
+            <a>
+              <app-image-shell [display]="'cover'" animation="spinner" class="add-overlay item-image" [src]="'./assets/vip.jpg'" (click)="openModalRequestExpress(item?.scheduleRouteId?.scheduleRouteId, true, item)">
+                <app-aspect-ratio [ratio]="{w:4, h:2}">
+                  <div class="content-inside-item-image">
+                    <div class="item-icon" *ngIf="item?.expressRequestId">
+                      <app-aspect-ratio animation="spinner" [ratio]="{w:4, h:4}">
+                        <app-image-shell [src]="'./assets/sample-images/route/route.png'" class="icon-image"></app-image-shell>
+                      </app-aspect-ratio>
+                    </div>
+                    <div class="item-cta" *ngIf="item?.expressRequestId">
+                      <span>VIP</span>
+                      <ion-icon class="cta-icon" name="arrow-forward"></ion-icon>
+                    </div>
+                  </div>
+                </app-aspect-ratio>
+              </app-image-shell>
+            </a>
+          </ion-col>
+        </ion-row>
+        <ion-row class="info-row">
+          <ion-col class="main-info-col">
+            <h3 class="item-name" *ngIf="item?.from">
+              <a class="name-anchor">
+                <app-text-shell animation="bouncing" [data]="item?.from + ' - ' + item?.to" lines="3"></app-text-shell>
+              </a>
+            </h3>
+            <p class="item-address" *ngIf="item?.notes">
+              <app-text-shell animation="bouncing" [data]="item?.notes"></app-text-shell>
+            </p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="stats-row">
+          <ion-col size="3" class="item-rating">
+            <span class="rating-value">
+              <app-text-shell [data]="item?.date | date : 'shortTime'"></app-text-shell>
+            </span>
+            <ion-icon name="time-outline"></ion-icon>
+          </ion-col>
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.statusId?.statusName | uppercase }}</ion-badge>
+          </ion-col>
+  
+          <!-- <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col> -->
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.licensePlate | uppercase }}</ion-badge>
+          </ion-col>
+  
+          
+        </ion-row>
+        <ion-row class="stats-row">
+  
+          <ion-col size="6" class="item-rating">
+            <ion-badge color="primary" *ngIf="item?.scheduleRouteId?.lstRouteEmployees">{{ item?.scheduleRouteId?.lstRouteEmployees?.length + ' EMPLEADOS' }}</ion-badge>
+          </ion-col>
+  
+          <!-- <ion-col size="3" class="item-rating">
+            <ion-badge color="primary">{{ item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col> -->
+  
+          <ion-col size="3" class="item-rating">
+            <ion-badge color="primary" *ngIf="item?.transportUnitId?.unitNumber">{{'UNIDAD ' + item?.transportUnitId?.unitNumber | uppercase }}</ion-badge>
+          </ion-col>
+  
+          
+        </ion-row>
+
+      </div>
+
+    </div>
+  </ng-container>
+
+  <ion-slides [options]="sliderOptions"  *ngIf="listing?.items.length === 0 && expressRequest?.length === 0">
+
+    <ion-slide class="animate__animated animate__fadeIn">
+      <div class="slide animated fadeIn slow">
+        <img class="imagen" src="../../../assets/route.svg">
+        <h2>Ups! Sin Rutas.</h2>
+        <p class="ion-text-center">No se encontraron rutas asignadas.</p>
+      </div>
+    </ion-slide>
+
+  </ion-slides>
+</ion-content>

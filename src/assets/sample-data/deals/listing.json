@@ -1,0 +1,104 @@
+[
+  {
+    "companyId": {
+      "companyId": 1,
+      "companyName": "OneLink",
+      "since": "2022-01-12T15:01:07.562Z",
+      "statusId": {
+        "routeStatus": true,
+        "statusId": 0,
+        "statusName": "ACTIVO"
+      }
+    },
+    "date": "2022-01-19T15:01:07.562Z",
+    "from": "Olivos Plaza, San Benito",
+    "routeId": {
+      "companyId": {
+        "companyId": 1,
+        "companyName": "OneLink",
+        "since": "2022-01-12T15:01:07.562Z",
+        "statusId": {
+          "routeStatus": true,
+          "statusId": 0,
+          "statusName": "ACTIVO"
+        }
+      },
+      "cronExpression": "string",
+      "routeDepartureTime": "2022-01-12T15:01:07.562Z",
+      "routeDestinationCity": "string",
+      "routeDestinationPlace": "string",
+      "routeId": 0,
+      "routeImage": "string",
+      "routeName": "string",
+      "routeNotes": "string",
+      "statusId": {
+        "routeStatus": true,
+        "statusId": 0,
+        "statusName": "string"
+      },
+      "stops": "string"
+    },
+    "routeRequestId": 0,
+    "to": "Plaza Futura, World Trade Center",
+    "tripTypeId": {
+      "statusId": {
+        "routeStatus": true,
+        "statusId": 0,
+        "statusName": "string"
+      },
+      "tripName": "Equipo y Empleados",
+      "tripTypeId": 0
+    }
+  },
+  {
+    "companyId": {
+      "companyId": 1,
+      "companyName": "OneLink",
+      "since": "2022-01-12T15:01:07.562Z",
+      "statusId": {
+        "routeStatus": true,
+        "statusId": 0,
+        "statusName": "ACTIVO"
+      }
+    },
+    "date": "2020-01-12T15:01:07.562Z",
+    "from": "Olivos Plaza, San Benito",
+    "routeId": {
+      "companyId": {
+        "companyId": 1,
+        "companyName": "OneLink",
+        "since": "2021-01-12T15:01:07.562Z",
+        "statusId": {
+          "routeStatus": true,
+          "statusId": 0,
+          "statusName": "ACTIVO"
+        }
+      },
+      "cronExpression": "string",
+      "routeDepartureTime": "2022-01-12T15:01:07.562Z",
+      "routeDestinationCity": "string",
+      "routeDestinationPlace": "string",
+      "routeId": 0,
+      "routeImage": "string",
+      "routeName": "string",
+      "routeNotes": "string",
+      "statusId": {
+        "routeStatus": true,
+        "statusId": 0,
+        "statusName": "string"
+      },
+      "stops": "string"
+    },
+    "routeRequestId": 0,
+    "to": "Plaza Futura, World Trade Center",
+    "tripTypeId": {
+      "statusId": {
+        "routeStatus": true,
+        "statusId": 0,
+        "statusName": "string"
+      },
+      "tripName": "Equipo y Empleados",
+      "tripTypeId": 0
+    }
+  }
+]

@@ -1,0 +1,20 @@
+ <ion-tabs #tabs (ionTabsDidChange)="tabChange(tabs)">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="routes" [routerLinkActive]="['tab-selected']" [routerLink]="['/app/routes']" *ngIf="typeUser !== 5">
+      <ion-icon name="map-outline"></ion-icon>
+      <ion-label class="tab-title">Rutas</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="my-route" [routerLinkActive]="['tab-selected']" [routerLink]="['/app/my-route']" *ngIf="typeUser !== 5 && typeUser !== 4 && typeUser !== 3">
+      <ion-icon name="navigate-circle-outline"></ion-icon>
+      <ion-label class="tab-title">Mis Ruta</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="my-route" [routerLinkActive]="['tab-selected']" [routerLink]="['/app/my-route']" *ngIf="typeUser === 5">
+      <ion-icon name="navigate-circle-outline"></ion-icon>
+      <ion-label class="tab-title">Rutas Asignada</ion-label>
+    </ion-tab-button>
+    <!-- <ion-tab-button tab="alert" [routerLinkActive]="['tab-selected']" [routerLink]="['/app/alert']">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <ion-label class="tab-title">Alertas</ion-label>
+    </ion-tab-button> -->
+  </ion-tab-bar>
+</ion-tabs>

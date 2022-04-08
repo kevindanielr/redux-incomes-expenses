@@ -1,0 +1,71 @@
+<ion-toolbar color="primary" class="ion-text-uppercase">
+  <ion-button slot="start" fill="clear" color="light" (click)="closeModal()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <h6>INGRESO DE EQUIPO</h6>
+</ion-toolbar>
+
+<ion-content style="height: 90%;">
+  <div class="forms-validations-content">
+    <form class="validations-form" [formGroup]="asignForm" (ngSubmit)="onSubmit()">
+
+
+      <ion-list class="inputs-list" lines="full">
+        <ion-list-header>
+          <ion-label class="header-title">INFORMACIÓN GENERAL DEL EQUIPO</ion-label>
+        </ion-list-header>
+
+        <ion-item>
+          <ion-label position="floating">Nombre de Equipo</ion-label>
+          <ion-input formControlName="equipmentName"></ion-input>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="equipmentNameNoValido">
+            <ion-icon name="information-circle"></ion-icon> Nombre del equipo es requerido.
+          </ion-label>
+        </ion-text>
+
+        <ion-item>
+          <ion-label position="floating">Descripción de Equipo</ion-label>
+          <ion-textarea formControlName="equipmentDescription" rows="5"></ion-textarea>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="equipmentDescriptionNoValido">
+            <ion-icon name="information-circle"></ion-icon> Descripción del equipo es requerido.
+          </ion-label>
+        </ion-text>
+        <br>
+        <ion-item (click)="openCamera()" *ngIf="this.tempImage === ''">
+          <app-aspect-ratio [ratio]="{w: 0.7, h: 0.7}">
+            <app-image-shell class="user-avatar" animation="spinner" [src]="'./assets/default.png'"></app-image-shell>
+          </app-aspect-ratio>
+        </ion-item>
+        <ion-item *ngIf="this.tempImage !== ''"  (click)="openCamera()">
+          <!-- <app-aspect-ratio [ratio]="{w: 0.7, h: 0.7}"> -->
+            <app-image-shell class="user-avatar" animation="spinner" [src]="this.tempImage"></app-image-shell>
+          <!-- </app-aspect-ratio> -->
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="initialPhotoNoValido">
+            <ion-icon name="information-circle"></ion-icon> Adjuntar foto es requerido.
+          </ion-label>
+        </ion-text>
+        <br>
+        <ion-text class="descripcion">
+          <ion-label color="secondary">
+            <ion-icon name="information-circle"></ion-icon> Adjunte una fotografía del equipo, presione y tome una fotografía con su dispositivo móvil.
+          </ion-label>
+        </ion-text>
+      </ion-list>
+
+    </form>
+
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button class="submit-btn" type="submit" expand="block" fill="solid" (click)="onSubmit()">Agregar Equipo</ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>REGISTRATE</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="signup-content">
+  <h2 class="auth-title">
+    Bienvenid@, Registrate como usuario Express
+  </h2>
+  <form [formGroup]="signupForm" (ngSubmit)="doSignup()">
+    <ion-list class="inputs-list" lines="full">
+      <ion-item class="input-item">
+        <ion-input type="email" placeholder="DUI/Pasaporte" formControlName="identifier" clearInput autocapitalize="off"></ion-input>
+      </ion-item>
+      <div class="error-container">
+        <ng-container >
+          <div class="info-message">
+            <span>Ingrese un número de identificación personal sin guiones ni espacios.</span>
+          </div>
+          <div class="error-message" *ngIf="identifierValido">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>El DUI/Pasaporte es requerido</span>
+          </div>
+        </ng-container>
+      </div>
+
+      <div>
+        <ion-item class="input-item">
+          <ion-input type="email" placeholder="Nombre completo" formControlName="name" clearInput autocapitalize="on"></ion-input>
+        </ion-item>
+        <div class="error-container">
+          <ng-container >
+            <div class="error-message" *ngIf="nameValido">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>El nombre completo es requerido</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div>
+        <ion-item class="input-item">
+          <ion-input type="email" placeholder="Número de contacto" formControlName="phone" clearInput autocapitalize="on"></ion-input>
+        </ion-item>
+        <div class="error-container">
+          <ng-container >
+            <div class="info-message">
+              <span>Ingrese un número de contacto sin guiones ni espacios.</span>
+            </div>
+            <div class="error-message" *ngIf="phoneValido">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>El número de contacte es requerido</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+    </ion-list>
+
+    <ion-button class="signup-btn" type="submit" expand="block" [disabled]="!signupForm.valid">REGISTRARME</ion-button>
+    <ion-row class="other-auth-options-row">
+      <ion-button class="login-btn" fill="clear" [routerLink]="['/getting-started']">
+        MENÚ DE SERVICIOS
+      </ion-button>
+    </ion-row>
+    <ion-row class="other-auth-options-row">
+      <ion-button class="login-btn" fill="clear" [routerLink]="['/auth/login']">
+        Ya tengo una cuenta
+      </ion-button>
+    </ion-row>
+  </form>
+
+
+  <div class="legal-stuff">
+    Registrate como usuario Express y disfruta de los beneficios de usar nuestro servicio de transporte 24/7. <a class="legal-action">Transportes Shalom 2022</a>.
+  </div>
+</ion-content>

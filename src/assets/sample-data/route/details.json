@@ -1,0 +1,52 @@
+{
+  "routeId": "1",
+  "routeName": "Metrocentro",
+  "routeDestinationCity": "San Salvador",
+  "routeDestinationPlace": "Metrocentro 8va Etapa",
+  "cronExpression": "",
+  "stops": [
+    {
+      "nameStop": "Calle Sisimiles",
+      "hourFrom": "19:00",
+      "hourTo": "19:10"
+    },
+    {
+      "nameStop": "Avenida Cuba",
+      "hourFrom": "19:10",
+      "hourTo": "19:30"
+    },
+    {
+      "nameStop": "Parada de Reloj de Flores",
+      "hourFrom": "19:30",
+      "hourTo": "21:00"
+    },
+    {
+      "nameStop": "Tiendona",
+      "hourFrom": "21:00",
+      "hourTo": "21:45"
+    },
+    {
+      "nameStop": "Metrocentro",
+      "hourFrom": "21:45",
+      "hourTo": "22:00"
+    }
+  ],
+  "notes": "Favor estar 5 minutos antes de la hora de salida. Es obligación portar mascarilla en todo momento. Si desea bajarse en otro lugar camino a una parada, avisar al conductor con anticipación",
+  "routeDepartureTime": "2022-01-06T10:11:25+00:00",
+  "statusId": "ACTIVO",
+  "companyId": "1",
+  "image": "./assets/sample-images/route/metro.jpg",
+  "location": {
+    "address": "39 Avenida Norte Los Sisimiles and, Avenida Los Andes, San Salvador",
+    "city": "San Salvador, El Salvador",
+    "latlng": "-34.9026348,-56.1814708",
+    "mapImage": "./assets/sample-images/travel/travel-map.png"
+  },
+  "transportUnit": {
+    "image": "./assets/sample-images/route/transportunit.jpg",
+    "licensePlate": "M456987",
+    "unitNumber": "4",
+    "passenger": "6",
+    "doors": "4"
+  }
+}

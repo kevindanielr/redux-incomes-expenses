@@ -1,0 +1,277 @@
+<ion-toolbar color="primary" class="ion-text-uppercase">
+  <ion-button slot="start" fill="clear" color="light" (click)="closeModal()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <h6>ASIGNAR RUTA</h6>
+</ion-toolbar>
+
+<ion-content style="height: 95% !important;">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="forms-validations-content">
+    <form class="validations-form" [formGroup]="this.asignForm" (ngSubmit)="onSubmit(this.asignForm.value)">
+      <ion-list class="inputs-list" lines="full">
+        <ion-list-header>
+          <ion-label class="header-title">INFORMACIÓN GENERAL</ion-label>
+        </ion-list-header>
+
+
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label>Ruta: {{ dataRoute?.routeId?.routeDestinationPlace }} - {{ dataRoute?.routeId?.routeDestinationCity }} - {{ dataRoute?.routeId?.routeHour | date: 'shortTime' }} </ion-label>
+        </ion-item>
+
+        <ion-item class="input-item item-label-floating" formGroupName="driverId">
+          <ion-label position="floating">Motorista</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione" formControlName="driverId" (ionChange)="changeDriver( $event )">
+            <ion-select-option *ngFor="let item of this.drivers" [value]="item?.driverId">{{ item?.userId?.userName }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <div class="firebase-listing-content animate__animated animate__fadeInDown" *ngIf="this.asignForm.get('driverId').get('driverId').value !== null">
+          <ion-list class="items-list animate__animated animate__fadeInDown" *ngIf="flagSelectDriver">
+            <ion-item class="list-item">
+              <ion-row class="user-row">
+                <ion-col size="3" class="user-image-wrapper">
+                  <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                    <app-image-shell class="user-image" animation="spinner" [src]="this.selectedDriver?.driverPhoto" [alt]="'item image'"></app-image-shell>
+                  </app-aspect-ratio>
+                </ion-col>
+                <ion-col class="user-data-wrapper">
+                  <div class="user-info">
+                    <h3 class="user-name">
+                      <app-text-shell animation="bouncing" [data]="this.selectedDriver?.userId?.userName"></app-text-shell>
+                    </h3>
+                    <h5 class="user-age" *ngIf="this.selectedDriver?.driverLicense !== null">
+                      <app-text-shell animation="bouncing" [data]="this.selectedDriver?.driverLicense"></app-text-shell>
+                    </h5>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <ion-item class="input-item item-label-floating" formGroupName="transportUnitId">
+          <ion-label position="floating">Unidad</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione" formControlName="transportUnitId" (ionChange)="changeTransport( $event )">
+            <ion-select-option *ngFor="let item of this.transportUnit" [value]="item?.transportUnitId">{{ item?.unitNumber }} - {{ item?.licensePlate }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <div class="firebase-listing-content animate__animated animate__fadeInDown" *ngIf="this.asignForm.get('transportUnitId').get('transportUnitId').value !== null">
+          <ion-list class="items-list animate__animated animate__fadeInDown" *ngIf="flagSelectTransport" >
+            <ion-item class="list-item">
+              <ion-row class="user-row">
+                <ion-col size="3" class="user-image-wrapper">
+                  <app-aspect-ratio [ratio]="{w: 1.3, h: 1}">
+                    <app-image-shell class="user-image" animation="spinner" [src]="this.selectedTransport.transportImage" [alt]="'item image'"></app-image-shell>
+                  </app-aspect-ratio>
+                </ion-col>
+                <ion-col class="user-data-wrapper">
+                  <div class="user-info">
+                    <h3 class="user-name">
+                      <app-text-shell animation="bouncing" [data]="this.selectedTransport.unitNumber"></app-text-shell>
+                    </h3>
+                    <h5 class="user-age">
+                      <app-text-shell animation="bouncing" [data]="this.selectedTransport.licensePlate"></app-text-shell>
+                    </h5>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- When this bug (https://github.com/ionic-team/ionic-framework/issues/22117) gets fixed, remove .item-label-floating class -->
+        <!-- <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Notas</ion-label>
+          <ion-textarea rows="4" cols="20" placeholder="Ingrese aquí cualquier nota ..." value="*Al ingresar a la unidad, es importante portar en todo momento la mascarilla">
+          </ion-textarea>
+        </ion-item> -->
+        <!-- <div class="error-container">
+          <ng-container *ngFor="let validation of validations.name">
+            <div class="error-message"
+              *ngIf="validationsForm.get('name').hasError(validation.type) && (validationsForm.get('name').dirty || validationsForm.get('name').touched)">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>{{ validation.message }}</span>
+            </div>
+          </ng-container>
+        </div> -->
+      </ion-list>
+
+    </form>
+
+  </div>
+
+  
+  
+  <div class="class notifications-content" >
+    <ion-item-divider sticky="true">
+      <ion-label>LISTA DE EMPLEADOS SIN RUTA ASIGNADA</ion-label>
+    </ion-item-divider>
+  
+    <ion-searchbar placeholder="Búsqueda por nombre" class="friends-searchbar" animated [(ngModel)]="searchQuery"></ion-searchbar>
+    <ng-container *ngIf="employee?.length > 0">
+      <ion-item-group>
+        <ion-item class="notification-item" lines="none" *ngFor="let emp of employee | filtroEmpleado: this.searchQuery">
+          <ion-row class="notification-item-wrapper">
+            <ion-col size="2">
+              <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                <app-image-shell class="notification-image" animation="spinner" [src]="emp?.employeeId?.employeePhoto" [alt]="'user image'">
+                </app-image-shell>
+                <!-- <img [src]="notification.image" class="notification-image" alt=""> -->
+              </app-aspect-ratio>
+            </ion-col>
+            <ion-col class="details-wrapper" (click)="emp.checked = !emp.checked">
+              <h2 class="details-name">{{ emp?.employeeId?.employeeFirstName }} {{ emp?.employeeId?.employeeLastName }} </h2>
+              <p class="details-description">ID: {{ emp?.employeeId?.employeeNumber }}</p>
+            </ion-col>
+            <ion-col size="2" >
+              <ion-checkbox mode="ios" color="primary" [(ngModel)]="emp.checked" [checked]="emp.checked"></ion-checkbox>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-item-group>
+    </ng-container>
+    <ng-container *ngIf="employee === null">
+      <ion-item-group>
+        <ion-item class="notification-item" lines="none">
+          <ion-row class="notification-item-wrapper">
+            <ion-col size="2">
+              <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                </app-image-shell>
+              </app-aspect-ratio>
+            </ion-col>
+            <ion-col class="details-wrapper">
+              <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+              <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+        <ion-item class="notification-item" lines="none">
+          <ion-row class="notification-item-wrapper">
+            <ion-col size="2">
+              <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                </app-image-shell>
+              </app-aspect-ratio>
+            </ion-col>
+            <ion-col class="details-wrapper">
+              <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+              <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-item-group>
+    </ng-container>
+
+    <ng-container *ngIf="employee && (employee | filtroEmpleado: this.searchQuery).length  === 0">
+      <ion-slides [options]="sliderOptions">
+
+        <ion-slide class="animate__animated animate__fadeIn">
+          <div class="slide animated fadeIn slow">
+            <img class="imagen" src="../../../assets/card.svg">
+            <h2>Ups! Sin Empleados.</h2>
+            <p class="ion-text-center desc">No se encontraron empleados sin ruta asignada.</p>
+          </div>
+        </ion-slide>
+    
+      </ion-slides>
+    </ng-container>
+  </div>
+
+  <div class="class notifications-content animate__animated animate__fadeIn">
+    <ion-item-divider sticky="true" *ngIf="equipment !== null && this.equipment?.length > 0">
+      <ion-label>LISTA DE EQUIPO SIN RUTA ASIGNADA</ion-label>
+    </ion-item-divider>
+
+    <div>
+
+      <ng-container *ngIf="equipment !== null">
+        <br>
+        <ion-item-group>
+          <ion-item class="notification-item" lines="none" *ngFor="let emp of equipment">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="emp?.initialPhoto" [alt]="'user image'">
+                  </app-image-shell>
+                  <!-- <img [src]="notification.image" class="notification-image" alt=""> -->
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper" (click)="emp.checked = !emp.checked">
+                <h2 class="details-name">{{ emp?.equipmentName }}</h2>
+                <p class="details-description">{{ emp?.equipmentDescription }}</p>
+              </ion-col>
+              <ion-col size="2" >
+                <ion-checkbox mode="ios" color="primary" [(ngModel)]="emp.checked" [checked]="emp.checked"></ion-checkbox>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+        </ion-item-group>
+      </ng-container>
+      <ng-container *ngIf="equipment === null">
+        <ion-item-group>
+          <ion-item class="notification-item" lines="none">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                  </app-image-shell>
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+          <ion-item class="notification-item" lines="none">
+            <ion-row class="notification-item-wrapper">
+              <ion-col size="2">
+                <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                  <app-image-shell class="notification-image" animation="spinner" [src]="" [alt]="'user image'">
+                  </app-image-shell>
+                </app-aspect-ratio>
+              </ion-col>
+              <ion-col class="details-wrapper">
+                <app-text-shell animation="bouncing" style="width: 70%;"></app-text-shell>
+                <app-text-shell animation="bouncing" style="width: 30%;"></app-text-shell>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+        </ion-item-group>
+      </ng-container>
+      
+    </div>
+
+    <!-- <ng-container *ngIf="employee && (employee | filtroEmpleado: this.searchQuery).length  === 0">
+      <ion-slides [options]="sliderOptions">
+
+        <ion-slide class="animate__animated animate__fadeIn">
+          <div class="slide animated fadeIn slow">
+            <img class="imagen" src="../../../assets/laptop.svg">
+            <h2>Ups! Sin Empleados.</h2>
+            <p class="ion-text-center desc">No se encontraron empleados sin ruta asignada.</p>
+          </div>
+        </ion-slide>
+    
+      </ion-slides>
+    </ng-container> -->
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button class="submit-btn" type="submit" expand="block" fill="solid" (click)="onSubmit(this.asignForm.value)">ASIGNAR RUTA</ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,312 @@
+<ion-toolbar color="primary" class="ion-text-uppercase">
+  <ion-button slot="start" fill="clear" color="light" (click)="dismiss()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <h6>SOLICITUD DE SERVICIO VIP</h6>
+</ion-toolbar>
+
+<ion-content class="user-friends-content" style="height: 95% !important">
+
+  <div class="forms-validations-content">
+    <form class="validations-form" [formGroup]="validationsForm" (ngSubmit)="onSubmit()">
+      <ion-list class="inputs-list" lines="full">
+        <ion-list-header>
+          <ion-label class="header-title">INFORMACIÓN DE SOLICITUD VIP</ion-label>
+        </ion-list-header>
+
+        <div class="firebase-listing-content animate__animated animate__fadeInDown" *ngIf="this.typeUser === 3 || this.typeUser === 4 || this.typeUser === 5">
+          <ion-row>
+            <ion-col size="10">
+              <ion-item class="input-item item-label-floating" formGroupName="expressUserId">
+                <ion-label position="floating">DUI/Pasaporte/Teléfono</ion-label>
+                <ion-input (ionChange)="setIdentifier($event)" ></ion-input>
+              </ion-item>
+              <ion-text class="descripcion">
+                <ion-label color="danger" *ngIf="userExpressNoValido">
+                  <ion-icon name="information-circle"></ion-icon> Digite un usuario válido.
+                </ion-label>
+              </ion-text>
+            </ion-col>
+            <ion-col size="1">
+              <ion-button (click)="this.searchExpressUser()">
+                <ion-icon slot="icon-only" name="search" shape="round" ></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+        </div>
+
+        
+
+        <div class="firebase-listing-content animate__animated animate__fadeInDown" *ngIf="this.isFoundExpressUser">
+          <ion-list class="items-list animate__animated animate__fadeInDown">
+            <ion-item class="list-item">
+              <ion-row class="user-row">
+                <!-- <ion-col size="3" class="user-image-wrapper">
+                  <app-aspect-ratio [ratio]="{w: 2, h: 1.5}">
+                    <app-image-shell class="user-image" animation="spinner" [src]="this.selectedCar.image" [alt]="'item image'"></app-image-shell>
+                  </app-aspect-ratio>
+                </ion-col> -->
+                <ion-col class="user-data-wrapper">
+                  <div class="user-info">
+                    <h3 class="user-name">
+                      <app-text-shell animation="bouncing" *ngIf="!this.selectedExpressUser?.name" [data]="this.selectedExpressUser?.name"></app-text-shell>
+                      <span *ngIf="this.selectedExpressUser?.name">{{this.selectedExpressUser?.name}}</span>
+                    </h3>
+                    <h5 class="user-age">
+                      <app-text-shell animation="bouncing" *ngIf="!this.selectedExpressUser?.identifier" [data]="this.selectedExpressUser?.identifier"></app-text-shell>
+                      <span *ngIf="this.selectedExpressUser?.identifier">DUI/Pasaporte: {{this.selectedExpressUser?.identifier}}</span>
+                    </h5>
+                    <h5 class="user-age">
+                      <app-text-shell animation="bouncing" *ngIf="!this.selectedExpressUser?.phone" [data]="this.selectedExpressUser?.phone"></app-text-shell>
+                      <span *ngIf="this.selectedExpressUser?.phone">Teléfono: {{this.selectedExpressUser?.phone}}</span>
+                    </h5>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Datetime in popover with cover element -->
+        <ion-item button="true" id="open-date-input" class="input-item birthdate-item">
+          <ion-label color="secondary" position="stacked">Fecha de solicitud</ion-label>
+          <ion-text class="placeholder" *ngIf="dateValue === ''">Seleccione una fecha</ion-text>
+          <ion-text class="placeholder" *ngIf="dateValue !== ''">{{ dateValue | date: 'medium' }}</ion-text>
+          <ion-popover trigger="open-date-input" show-backdrop="false">
+            <ng-template>
+              <ion-datetime #popoverDatetime presentation="date-time" formControlName="date"
+                (ionChange)="dateValue = this.validationsForm.controls.date.value"></ion-datetime>
+            </ng-template>
+          </ion-popover>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="dateNoValido">
+            <ion-icon name="information-circle"></ion-icon> La fecha es requerida.
+          </ion-label>
+        </ion-text>
+
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Tipo de vehículo</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione" formControlName="tipoVehiculo" (ionChange)="changeType( $event )">
+            <ion-select-option value="Sedan">Carro Sedan</ion-select-option>
+            <ion-select-option value="Camioneta">Camioneta VIP</ion-select-option>
+            <ion-select-option value="MiniVAN">MiniVAN (Microbus)</ion-select-option>
+            <ion-select-option value="Pickup">Pickup</ion-select-option>
+            <ion-select-option value="Bus">Bus</ion-select-option>
+            <ion-select-option value="Furgón">Furgón (1-8 Toneladas)</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="vehiculoNoValido">
+            <ion-icon name="information-circle"></ion-icon> Tipo de vehículo es requerido.
+          </ion-label>
+        </ion-text>
+
+        <div class="firebase-listing-content animate__animated animate__fadeInDown" *ngIf="this.validationsForm.get('tipoVehiculo').value !== null">
+          <ion-list class="items-list animate__animated animate__fadeInDown">
+            <ion-item class="list-item">
+              <ion-row class="user-row">
+                <ion-col size="3" class="user-image-wrapper">
+                  <app-aspect-ratio [ratio]="{w: 2, h: 1.5}">
+                    <app-image-shell class="user-image" animation="spinner" [src]="this.selectedCar.image" [alt]="'item image'"></app-image-shell>
+                  </app-aspect-ratio>
+                </ion-col>
+                <ion-col class="user-data-wrapper">
+                  <div class="user-info">
+                    <h3 class="user-name">
+                      <app-text-shell animation="bouncing" [data]="this.selectedCar.name"></app-text-shell>
+                    </h3>
+                    <h5 class="user-age">
+                      <ion-icon name="information-circle-outline"></ion-icon> Imagen con fines ilustrativos
+                    </h5>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Forma de pago</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione" formControlName="formaPago">
+            <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+            <ion-select-option value="Tarjeta de crédito/débito">Tarjeta de crédito/débito</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="pagoNoValido">
+            <ion-icon name="information-circle"></ion-icon> Forma de pago es requerida.
+          </ion-label>
+        </ion-text>
+
+        
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Lugar de origen</ion-label>
+          <ion-textarea rows="2" cols="20" placeholder="Ingrese aquí la dirección de origen ..." formControlName="from">
+          </ion-textarea>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="fromNoValido">
+            <ion-icon name="information-circle"></ion-icon> Lugar de origen de la solicitud es requerido.
+          </ion-label>
+        </ion-text>
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Lugar de destino</ion-label>
+          <ion-textarea rows="2" cols="20" placeholder="Ingrese aquí la dirección de destino ..." formControlName="to">
+          </ion-textarea>
+        </ion-item>
+        <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="toNoValido">
+            <ion-icon name="information-circle"></ion-icon> Lugar de destino de la solicitud es requerido.
+          </ion-label>
+        </ion-text>
+
+        <ion-item class="counter-item input-item">
+          <ion-label class="counter-label">Equipaje</ion-label>
+          <ion-label class="counter-value">{{validationsForm.controls.numeroEquipaje.value}}</ion-label>
+          <app-counter-input formControlName="numeroEquipaje" basic></app-counter-input>
+        </ion-item>
+        <!-- <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="numeroEquipajeNoValido">
+            <ion-icon name="information-circle"></ion-icon> Número de equipaje invalido.
+          </ion-label>
+        </ion-text> -->
+
+        <ion-item class="counter-item input-item">
+          <ion-label class="counter-label">Personas</ion-label>
+          <ion-label class="counter-value">{{validationsForm.controls.numeroPersonas.value}}</ion-label>
+          <app-counter-input formControlName="numeroPersonas" basic></app-counter-input>
+        </ion-item>
+        <!-- <ion-text class="descripcion">
+          <ion-label color="danger" *ngIf="numeroPersonasNoValido">
+            <ion-icon name="information-circle"></ion-icon> Número de personas invalido.
+          </ion-label>
+        </ion-text> -->
+
+        <ion-item class="input-item item-label-floating">
+          <ion-label position="floating">Notas</ion-label>
+          <ion-textarea formControlName="notes" rows="4" cols="20"
+            value="*Al ingresar a la unidad, es importante portar en todo momento la mascarilla">
+          </ion-textarea>
+        </ion-item>
+
+
+      </ion-list>
+
+
+      <div *ngIf="this.selectedDriver !== undefined || this.selectedTransport !== undefined || this.typeUser === 3 || this.typeUser === 4 || this.typeUser === 5">
+        
+        <ion-item-divider sticky="true">
+          <ion-label>ASIGNACIÓN DE RUTA</ion-label>
+        </ion-item-divider>
+  
+        <ion-item class="input-item item-label-floating" formGroupName="driverId">
+          <ion-label position="floating">Motorista</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione" formControlName="driverId" (ionChange)="changeDriver( $event )">
+            <ion-select-option *ngFor="let item of this.drivers" [value]="item?.driverId">{{ item?.userId?.userName }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+  
+        <div class="firebase-listing-content animate__animated animate__fadeInDown" *ngIf="this.selectedDriver !== undefined">
+          <ion-list class="items-list animate__animated animate__fadeInDown" *ngIf="flagSelectDriver">
+            <ion-item class="list-item">
+              <ion-row class="user-row">
+                <ion-col size="3" class="user-image-wrapper">
+                  <app-aspect-ratio [ratio]="{w: 1, h: 1}">
+                    <app-image-shell class="user-image" animation="spinner" [src]="this.selectedDriver?.driverPhoto" [alt]="'item image'"></app-image-shell>
+                  </app-aspect-ratio>
+                </ion-col>
+                <ion-col class="user-data-wrapper">
+                  <div class="user-info">
+                    <h3 class="user-name">
+                      <app-text-shell animation="bouncing" [data]="this.selectedDriver?.userId?.userName"></app-text-shell>
+                    </h3>
+                    <h5 class="user-age">
+                      <app-text-shell animation="bouncing" [data]="this.selectedDriver?.driverLicense"></app-text-shell>
+                    </h5>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </div>
+  
+        <ion-item class="input-item item-label-floating" formGroupName="transportUnitId">
+          <ion-label position="floating">Unidad</ion-label>
+          <ion-select cancelText="Cancelar" okText="OK" interface="action-sheet" placeholder="Seleccione" formControlName="transportUnitId" (ionChange)="changeTransport( $event )">
+            <ion-select-option *ngFor="let item of this.transportUnit" [value]="item?.transportUnitId">{{ item?.unitNumber }} - {{ item?.licensePlate }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+  
+        <div class="firebase-listing-content animate__animated animate__fadeInDown" *ngIf="this.selectedTransport !== undefined">
+          <ion-list class="items-list animate__animated animate__fadeInDown" *ngIf="flagSelectTransport" >
+            <ion-item class="list-item">
+              <ion-row class="user-row">
+                <ion-col size="3" class="user-image-wrapper">
+                  <app-aspect-ratio [ratio]="{w: 1.3, h: 1}">
+                    <app-image-shell class="user-image" animation="spinner" [src]="this.selectedTransport?.transportImage" [alt]="'item image'"></app-image-shell>
+                  </app-aspect-ratio>
+                </ion-col>
+                <ion-col class="user-data-wrapper">
+                  <div class="user-info">
+                    <h3 class="user-name">
+                      <app-text-shell animation="bouncing" [data]="this.selectedTransport?.unitNumber"></app-text-shell>
+                    </h3>
+                    <h5 class="user-age">
+                      <app-text-shell animation="bouncing" [data]="this.selectedTransport?.licensePlate"></app-text-shell>
+                    </h5>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed" *ngIf="this.userExpress">
+    <ion-fab-button color="success" (click)="openWhatsApp()" data-desc="¿Necesitas Ayuda?">
+      <ion-icon name="logo-whatsapp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- <ion-fab horizontal="end" vertical="bottom" slot="fixed" *ngIf="!this.userExpress" class="animate__animated animate__bounceIn">
+    <ion-fab-button color="secondary" (click)="openOptions()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab> -->
+
+</ion-content>
+
+
+<ion-footer *ngIf="this.typeUser !== 5">
+  <ion-toolbar>
+    <ion-button expand="block" fill="solid" color="primary" (click)="onSubmit()" *ngIf="!isSaveRequest">
+      AGREGAR SOLICITUD
+    </ion-button>
+    <ion-button expand="block" fill="solid" color="primary" (click)="onSubmit()" *ngIf="isSaveRequest">
+      MODIFICAR SOLICITUD
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-footer *ngIf="this.typeUser === 5">
+  <ion-toolbar *ngIf="this.dataRequest?.statusId.statusId === 11">
+    <ion-button color="secondary" class="submit-btn" type="submit" expand="block" fill="solid" (click)="startEndRoute('start')">Empezar
+      Ruta</ion-button>
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="this.dataRequest?.statusId.statusId === 12">
+    <ion-button color="primary" class="submit-btn" type="submit" expand="block" fill="solid" (click)="startEndRoute('finish')">finalizar
+      Ruta</ion-button>
+  </ion-toolbar>
+</ion-footer>
+

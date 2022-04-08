@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "routeId": "1",
+      "routeName": "Metrocentro",
+      "routeDestinationCity": "San Salvador",
+      "routeDestinationPlace": "Metrocentro 8va Etapa",
+      "cronExpression": "",
+      "stops": [
+
+      ],
+      "notes": "Favor estar 5 minutos antes de la hora de salida.",
+      "routeDepartureTime": "2022-01-04T18:11:25+00:00",
+      "statusId": "ASIGNADO",
+      "companyId": "1",
+      "image": "./assets/sample-images/route/metro.jpg"
+    }
+  ]
+}
